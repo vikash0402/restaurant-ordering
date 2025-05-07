@@ -2,12 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { styled } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+import Badge, { badgeClasses } from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
+import BasicModal from "../components/cart";
+
 // import prisma from "@/lib/prisma";
 
 function Index() {
   const [menuItems, setMenuItems] = useState<MenuItem[] | []>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     fetchMenuItems();
@@ -53,12 +60,21 @@ function Index() {
 
   const handleAddToCart = (item: MenuItem) => {
     console.log("Item added to cart:", item);
-    const { customerId, available, createdAt, ...rest } = item;
-    console.log("cartItem", customerId, available, createdAt);
-    setCart((prev) => [...prev, rest]);
+    // const { customerId, available, createdAt, ...rest } = item;
+    // console.log("cartItem", customerId, available, createdAt);
+
+    const exists = cart.some((cartItem) => cartItem.id === item.id);
+
+    if (exists) {
+      setCart(cart.filter((cartItem) => cartItem.id !== item.id));
+    } else {
+      setCart((prev) => [...prev, item]);
+    }
   };
 
-  console.log({ cart });
+  const ifExist = (item: MenuItem) => {
+    return cart.some((cartItem) => cartItem.id === item.id);
+  };
 
   if (loading) {
     return (
@@ -79,38 +95,60 @@ function Index() {
     price: number;
   }
 
-  interface CartItem {
-    description: string;
-    id: number;
-    image_url?: string;
-    name: string;
-    price: number;
-  }
+  // interface CartItem {
+  //   description: string;
+  //   id: number;
+  //   image_url?: string;
+  //   name: string;
+  //   price: number;
+  // }
+
+  const CartBadge = styled(Badge)`
+    & .${badgeClasses.badge} {
+      top: -12px;
+      right: -6px;
+    }
+  `;
+
+  const handleOpen = () => setOpen(true);
 
   return (
-    <div className="">
-      <h2 className=" font-bold text-center text-2xl py-2.5  ">Menu Items</h2>
+    <div className="w-full">
+      <h2 className=" font-bold text-center text-2xl  ">Menu Items</h2>
+      <button
+        // onClick={opencart}
+        onClick={handleOpen}
+        className="absolute top-4 right-4 text-white px-4 py-2 rounded"
+      >
+        <IconButton>
+          <ShoppingCartIcon fontSize="small" />
+          <CartBadge
+            badgeContent={cart.length}
+            color="primary"
+            overlap="circular"
+          />
+        </IconButton>
+      </button>
       <div className="flex justify-center w-full ">
         <div
-          className="flex gap-5 justify-center "
+          className="flex gap-7 justify-center "
           style={{ flexWrap: "wrap" }}
         >
           {menuItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col gap-2.5 w-1/4 text-center bg-yellow-100  p-6  rounded-lg shadow hover:shadow-amber-300 hover:shadow-lg transition"
+              className="flex flex-col  w-1/4 text-center bg-yellow-100  p-6  rounded-lg shadow hover:shadow-amber-300 hover:shadow-lg transition"
             >
-              <h3 className="text-xl font-semibold text-gray-800">
+              <h3 className="text-xl font-semibold text-gray-800 ">
                 {item.name}
               </h3>
-              <p className="text-gray-600">{item.description}</p>
+              <p className="text-gray-600 mb-2">{item.description}</p>
               <Image
                 src={item.image_url ?? ""}
                 width={300}
                 alt={item.name}
                 height={250}
                 style={{
-                  // width: "300px",
                   height: "250px",
                   objectFit: "cover",
                   border: "1px solid black",
@@ -124,28 +162,35 @@ function Index() {
                 </span>
                 <button
                   onClick={() => handleAddToCart(item)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-950 transition"
+                  className={` ${
+                    ifExist(item)
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-blue-500 hover:bg-blue-600"
+                  }  text-white px-4 py-2 rounded  transition`}
                 >
-                  <span className="">
-                    {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="24px"
-                      viewBox="0 -960 960 960"
-                      width="24px"
-                      fill="#1f1f1f"
-                    >
-                      <path d="M240-80q-33 0-56.5-23.5T160-160v-480q0-33 23.5-56.5T240-720h80q0-66 47-113t113-47q66 0 113 47t47 113h80q33 0 56.5 23.5T800-640v480q0 33-23.5 56.5T720-80H240Zm0-80h480v-480h-80v80q0 17-11.5 28.5T600-520q-17 0-28.5-11.5T560-560v-80H400v80q0 17-11.5 28.5T360-520q-17 0-28.5-11.5T320-560v-80h-80v480Zm160-560h160q0-33-23.5-56.5T480-800q-33 0-56.5 23.5T400-720ZM240-160v-480 480Z" />
-                    </svg> */}
-                    Add to Cart
-                  </span>
+                  {ifExist(item) ? (
+                    <span className="">Remove to Cart</span>
+                  ) : (
+                    <span className="">Add to Cart</span>
+                  )}
                 </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+      <BasicModal open={open} setOpen={setOpen} cart={cart} />
     </div>
   );
 }
 
 export default Index;
+
+// <ButtonGroup
+//   variant="contained"
+//   aria-label="Basic button group"
+// >
+//   <Button>+</Button>
+//   <Button>5</Button>
+//   <Button>-</Button>
+// </ButtonGroup>
