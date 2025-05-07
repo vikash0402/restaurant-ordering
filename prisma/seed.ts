@@ -47,26 +47,74 @@ const prisma = new PrismaClient().$extends(withAccelerate());
 //   },
 // ];
 
-const categoryData: Prisma.CategoryCreateInput[] = [
+// const categoryData: Prisma.CategoryCreateInput[] = [
+//   {
+//     name: "starter",
+//     description: "Food and beverages",
+//   },
+//   {
+//     name: "main course",
+//     description: "Food and beverages",
+//   },
+//   {
+//     name: "dessert",
+//     description: "Food and beverages",
+//   },
+//   {
+//     name: "beverages",
+//     description: "Food and beverages",
+//   },
+//   {
+//     name: "snacks",
+//     description: "Food and beverages",
+//   },
+// ];
+
+const menuItems: Prisma.MenuItemCreateInput[] = [
   {
-    name: "starter",
-    description: "Food and beverages",
+    name: "Spring Rolls",
+    description: "Crispy vegetarian spring rolls",
+    price: 5.99,
+    image_url:
+      "https://www.cubesnjuliennes.com/wp-content/uploads/2021/01/Veggie-Spring-Rolls.jpg",
+    available: true,
+    categoryId: 1,
   },
   {
-    name: "main course",
-    description: "Food and beverages",
+    name: "Grilled Chicken",
+    description: "Spicy grilled chicken with herbs",
+    price: 12.99,
+    image_url:
+      "https://www.onceuponachef.com/images/2020/05/best-grilled-chicken-1200x1658.jpg",
+    available: true,
+    categoryId: 2,
   },
   {
-    name: "dessert",
-    description: "Food and beverages",
+    name: "Chocolate Lava Cake",
+    description: "Warm cake with a molten chocolate center",
+    price: 6.49,
+    image_url:
+      "https://www.foodnetwork.com/content/dam/images/food/fullset/2014/2/19/1/WU0701H_Molten-Chocolate-Cakes_s4x3.jpg",
+    available: true,
+    categoryId: 3,
   },
   {
-    name: "beverages",
-    description: "Food and beverages",
+    name: "Lemonade",
+    description: "Refreshing homemade lemonade",
+    price: 3.25,
+    image_url:
+      "https://cdn.loveandlemons.com/wp-content/uploads/2022/06/lemonade.jpg",
+    available: true,
+    categoryId: 4,
   },
   {
-    name: "snacks",
-    description: "Food and beverages",
+    name: "French Fries",
+    description: "Crispy golden fries with ketchup",
+    price: 4.5,
+    image_url:
+      "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/French-fries-b9e3e0c.jpg",
+    available: true,
+    categoryId: 5,
   },
 ];
 
@@ -77,8 +125,12 @@ export async function main() {
   //   for (const c of customerData) {
   //     await prisma.customer.create({ data: c });
   //   }
-  for (const category of categoryData) {
-    await prisma.category.create({ data: category });
+  // for (const category of categoryData) {
+  //   await prisma.category.create({ data: category });
+  // }
+
+  for (const menuItem of menuItems) {
+    await prisma.menuItem.create({ data: menuItem });
   }
 }
 

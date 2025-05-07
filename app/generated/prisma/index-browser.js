@@ -150,6 +150,17 @@ exports.Prisma.CategoryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.MenuItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  image_url: 'image_url',
+  available: 'available',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -170,7 +181,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   Post: 'Post',
   Customer: 'Customer',
-  Category: 'Category'
+  Category: 'Category',
+  MenuItem: 'MenuItem'
 };
 
 /**
