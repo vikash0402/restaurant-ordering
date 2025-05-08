@@ -12,7 +12,7 @@ import BasicModal from "../components/cart";
 
 function Index() {
   const [menuItems, setMenuItems] = useState<MenuItem[] | []>([]);
-  const [cart, setCart] = useState<MenuItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
 
@@ -58,7 +58,7 @@ function Index() {
     fetchMenuItems();
   }, []);
 
-  const handleAddToCart = (item: MenuItem) => {
+  const handleAddToCart = (item: CartItem) => {
     console.log("Item added to cart:", item);
     // const { customerId, available, createdAt, ...rest } = item;
     // console.log("cartItem", customerId, available, createdAt);
@@ -68,6 +68,7 @@ function Index() {
     if (exists) {
       setCart(cart.filter((cartItem) => cartItem.id !== item.id));
     } else {
+      item.quantity = 1;
       setCart((prev) => [...prev, item]);
     }
   };
@@ -95,6 +96,18 @@ function Index() {
     price: number;
   }
 
+  interface CartItem {
+    available: boolean;
+    createdAt?: string;
+    customerId?: number;
+    description: string;
+    id: number;
+    image_url?: string;
+    name: string;
+    price: number;
+    quantity?: number;
+  }
+
   // interface CartItem {
   //   description: string;
   //   id: number;
@@ -111,6 +124,27 @@ function Index() {
   `;
 
   const handleOpen = () => setOpen(true);
+
+  const handleIncrement = (index: number) => {
+    console.log("index", index);
+
+    if (cart.length) {
+      if (cart[index]) {
+        cart[index].quantity = (cart[index].quantity ?? 0) + 1;
+      }
+      setCart([...cart]);
+    }
+  };
+  const handleDecrement = (index: number) => {
+    if (cart.length) {
+      if (cart[index] && cart[index].quantity !== 1) {
+        cart[index].quantity = (cart[index].quantity ?? 0) - 1;
+        setCart([...cart]);
+      } else {
+        setCart(cart.filter((cartItem, i) => i !== index));
+      }
+    }
+  };
 
   return (
     <div className="w-full">
@@ -179,18 +213,15 @@ function Index() {
           ))}
         </div>
       </div>
-      <BasicModal open={open} setOpen={setOpen} cart={cart} />
+      <BasicModal
+        open={open}
+        setOpen={setOpen}
+        cart={cart}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+      />
     </div>
   );
 }
 
 export default Index;
-
-// <ButtonGroup
-//   variant="contained"
-//   aria-label="Basic button group"
-// >
-//   <Button>+</Button>
-//   <Button>5</Button>
-//   <Button>-</Button>
-// </ButtonGroup>

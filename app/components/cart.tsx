@@ -1,29 +1,26 @@
+"use client";
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 // import Button from "@mui/material/Button";
 // import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import Image from "next/image";
+import { Button, ButtonGroup, Typography } from "@mui/material";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "80vw",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+// const style = {
+//   position: "absolute",
+//   top: "50%",
+//   left: "50%",
+//   transform: "translate(-50%, -50%)",
+//   width: "80vw",
+//   bgcolor: "background.paper",
+//   border: "2px solid #000",
+//   boxShadow: 24,
+//   p: 4,
+// };
 
-interface MenuItem {
+interface CartItem {
   available: boolean;
   createdAt?: string;
   customerId?: number;
@@ -32,37 +29,42 @@ interface MenuItem {
   image_url?: string;
   name: string;
   price: number;
+  quantity?: number;
 }
 
 interface BasicModalProps {
+  cart: CartItem[];
   open: boolean;
-  //   handleOpen: () => void;
+  handleDecrement: (index: number) => void;
+  handleIncrement: (index: number) => void;
   setOpen: (open: boolean) => void;
-  cart: MenuItem[];
 }
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-export default function BasicModal({ open, setOpen, cart }: BasicModalProps) {
+export default function BasicModal({
+  cart,
+  open,
+  handleDecrement,
+  handleIncrement,
+  setOpen,
+}: BasicModalProps) {
   const handleClose = () => setOpen(false);
 
   console.log({ cart });
+
+  const totalCharge = () => {
+    return cart.reduce(
+      (acc, curr) => acc + (curr.quantity ?? 0) * curr.price,
+      0
+    );
+  };
+
+  const chargesDetails: { key: string; value: number }[] = [
+    { key: "Items total", value: totalCharge() },
+    { key: "Delivery charge", value: cart.length ? 40 : 0 },
+    { key: "Handling charge", value: cart.length ? 10 : 0 },
+    { key: "SMS charge", value: cart.length ? 5 : 0 },
+  ];
+
   return (
     <div>
       <Modal
@@ -71,36 +73,119 @@ export default function BasicModal({ open, setOpen, cart }: BasicModalProps) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Dessert (100g serving)</TableCell>
-                  <TableCell align="right">Calories</TableCell>
-                  <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                  <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                  <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        <Box
+          sx={{
+            position: "relative",
+            border: "1px solid #e0e0e0",
+            borderRadius: 2,
+            padding: 2,
+            maxWidth: "70vw",
+            margin: "auto",
+            backgroundColor: "#fff",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            top: "10%",
+            maxHeight: "80vh",
+            overflow: "scroll",
+          }}
+        >
+          {cart.length ? (
+            cart.map((cartItem, index) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  mb: 1,
+                }}
+                key={cartItem.name + index}
+              >
+                <Box>
+                  <Image
+                    src={cartItem.image_url ?? ""}
+                    alt={cartItem.name}
+                    width={70}
+                    height={70}
+                    style={{
+                      width: "70px",
+                      height: "70px",
+                      objectFit: "cover",
+                      borderRadius: 8,
+                    }}
+                  />
+                </Box>
+
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {cartItem.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    400 g
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      mt: 0.5,
+                    }}
+                    color="primary"
                   >
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    Save for later
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <ButtonGroup
+                    variant="contained"
+                    size="small"
+                    aria-label="Quantity control"
+                  >
+                    <Button onClick={() => handleDecrement(index)}>-</Button>
+                    <Button disabled>{cartItem.quantity ?? 0}</Button>
+                    <Button onClick={() => handleIncrement(index)}>+</Button>
+                  </ButtonGroup>
+                  <Typography fontWeight="bold" sx={{ mt: 1 }}>
+                    ₹{cartItem.price}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <Box className="text-lg text-center">
+              <Typography>NO ITEM FOUND</Typography>
+            </Box>
+          )}
+          <Box>
+            <Typography fontWeight={600} fontSize={18} mt={3}>
+              Bill Details
+            </Typography>
+            <Box className="flex flex-col">
+              {chargesDetails.map((charges, index) => (
+                <Box key={charges.key + index} className="flex justify-between">
+                  <Typography>{charges.key}</Typography>
+                  <Typography>₹{charges.value}</Typography>
+                </Box>
+              ))}
+              <Box className="flex justify-between py-1">
+                <Typography fontWeight={600} fontSize={20}>
+                  Grand total
+                </Typography>
+                <Typography fontWeight={600} fontSize={20}>
+                  ₹
+                  {chargesDetails
+                    .reduce((acc, curr) => acc + curr.value, 0)
+                    .toFixed(2)}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Modal>
     </div>
