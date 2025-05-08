@@ -8,15 +8,26 @@
 
 
 2. Order save flow 
-- Create modal to save order details -> till 12:00
--  create order api
--  integrate order api  
+-  Create modal to save order details -> till 12:00
+-  Create order api
+-  Integrate order api  
 
 
-
-3. Add paymenent method for rozerpay. (Done) 
-- create a userfrom to add name, phone and email
-- pass this name, phoneNo and email to rozerpay 
+3. Add payment method for rozerpay. (Done) 
+- Create a userfrom to add name, phone and email
+- Pass this name, phoneNo and email to rozerpay
+- After payment update the status in order table. 
 
 
 4. sms service for payment confirmation
+
+
+5. create admin panel to login
+- add authentication for admin
+- Based on role, give access to analytics dashboard.
+
+6. Add qr generate
+- where we put name of any website
+- it will create an qr which can be downloaded.
+
+7. Scan and visit to our website
