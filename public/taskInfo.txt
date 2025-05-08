@@ -4,10 +4,19 @@
 - If go beyond 1 while decrement, remove the element from cart (Done)
 - Calulate the total as per current price and quality (Done) actual 13:00
 - If no item present make all charge to zero. (Done) 13:25 
-- Add overflow scroll in modal.
-- Add paymenent method for rozerpay and paytm.
+- Add overflow scroll in modal. (Done)- 15:36
 
 
-2. Create modal to save order details -> till 12:00
-3. create order api => till 1:00
-4. integrate order api => till 1:30  
+2. Order save flow 
+- Create modal to save order details -> till 12:00
+-  create order api
+-  integrate order api  
+
+
+
+3. Add paymenent method for rozerpay. (Done) 
+- create a userfrom to add name, phone and email
+- pass this name, phoneNo and email to rozerpay 
+
+
+4. sms service for payment confirmation
