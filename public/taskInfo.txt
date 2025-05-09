@@ -7,27 +7,34 @@
 - Add overflow scroll in modal. (Done)- 15:36
 
 
-2. Order save flow 
+2. Add customer
+- when user add its, details save customer details.
+- mange state to mange current value of customer
+- create order with exising items where payment status is pending.
+
+3. Order save flow 
 -  Create modal to save order details -> till 12:00
 -  Create order api
 -  Integrate order api  
 
-
-3. Add payment method for rozerpay. (Done) 
+4. Payment
+- Add payment method for rozerpay. (Done) 
 - Create a userfrom to add name, phone and email
 - Pass this name, phoneNo and email to rozerpay
 - After payment update the status in order table. 
 
 
-4. sms service for payment confirmation
+5. sms service for payment confirmation
 
 
-5. create admin panel to login
+6. create admin panel to login
+- add signup admin and login functionality for admin. (Done)
+- whiler create admin save hash password. (Done)
 - add authentication for admin
 - Based on role, give access to analytics dashboard.
 
-6. Add qr generate
+7. Add qr generate
 - where we put name of any website
 - it will create an qr which can be downloaded.
 
-7. Scan and visit to our website
+8. Scan and visit to our website
