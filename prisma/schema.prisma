@@ -39,6 +39,7 @@ model Customer {
   id           Int      @id @default(autoincrement())
   name         String
   phone_number String
+  orders Order[] 
   createdAt    DateTime @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -62,4 +63,47 @@ model MenuItem {
   categoryId Int
   category   Category  @relation(fields: [categoryId], references: [id])
   createdAt  DateTime  @default(now())
+  orderItems OrderItem[]
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  customerId Int
+  customer Customer @relation(fields: [customerId], references: [id])
+  status OrderStatus @default(PENDING)
+  total_amount Float
+  platform_charge Float
+  sms_charge Float
+  delivery_charge Float
+  orderItems OrderItem[]
+  payment_status Boolean @default(false)
+  createdAt DateTime @default(now())
+  transactions Transaction[]
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+  quantity Int
+  unit_price  Float
+  orderId Int
+  order Order @relation(fields:[orderId] , references:[id]) 
+  menuItemId Int
+  item MenuItem @relation(fields:[menuItemId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  orderId Int
+  order Order @relation(fields: [orderId], references: [id])
+  rozer_transation_id String
+  amount Float
+  status OrderStatus @default(PENDING)
+  createdAt DateTime @default(now())
 }

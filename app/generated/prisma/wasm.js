@@ -169,6 +169,36 @@ exports.Prisma.MenuItemScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  status: 'status',
+  total_amount: 'total_amount',
+  platform_charge: 'platform_charge',
+  sms_charge: 'sms_charge',
+  delivery_charge: 'delivery_charge',
+  payment_status: 'payment_status',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OrderItemScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  unit_price: 'unit_price',
+  orderId: 'orderId',
+  menuItemId: 'menuItemId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TransactionScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  rozer_transation_id: 'rozer_transation_id',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -183,7 +213,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.OrderStatus = exports.$Enums.OrderStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+};
 
 exports.Prisma.ModelName = {
   Admin: 'Admin',
@@ -191,7 +225,10 @@ exports.Prisma.ModelName = {
   Post: 'Post',
   Customer: 'Customer',
   Category: 'Category',
-  MenuItem: 'MenuItem'
+  MenuItem: 'MenuItem',
+  Order: 'Order',
+  OrderItem: 'OrderItem',
+  Transaction: 'Transaction'
 };
 
 /**

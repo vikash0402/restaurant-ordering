@@ -1,71 +1,69 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface IFormInputs {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const Signup: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IFormInputs>();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const { name, email, password } = formData;
-
-    if (!name || !email || !password) {
-      alert("All fields are required.");
-      return;
-    }
-
-    alert(`Signed up:\nName: ${name}\nEmail: ${email}`);
-    // Add your sign-up logic here (API call, Firebase, etc.)
+  const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
+    setLoading(true);
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    console.log({ response });
+    setLoading(false);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="bg-white p-8 rounded-lg shadow-md w-full max-w-md"
       >
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
 
         <input
-          type="text"
-          name="name"
           placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
+          {...register("name", { required: true, maxLength: 20 })}
           className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-
+        {errors.name && <span className="text-red-500"> Name is required</span>}
         <input
-          type="email"
-          name="email"
           placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
+          {...register("email", { required: true, maxLength: 20 })}
           className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-
+        {errors.email && (
+          <span className="text-red-500"> Email is required </span>
+        )}
         <input
-          type="password"
-          name="password"
           placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          type="password"
+          {...register("password", { required: true, maxLength: 20 })}
+          className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-
+        {errors.password && (
+          <span className="text-red-500"> Password is required </span>
+        )}
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
         >
-          Sign Up
+          {loading ? "loading..." : "Sign Up"}
         </button>
       </form>
     </div>

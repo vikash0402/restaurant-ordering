@@ -1,3 +1,4 @@
+import { Box, Button } from "@mui/material";
 import React, { useEffect } from "react";
 
 // Declare Razorpay types if not available
@@ -64,7 +65,17 @@ const Payment: React.FC = () => {
     document.body.appendChild(script);
   }, []);
 
-  return <button onClick={() => openPayModal(options)}>Pay</button>;
+  return (
+    <Box className="flex justify-center">
+      <Button
+        sx={{ background: "red" }}
+        variant="contained"
+        onClick={() => openPayModal(options)}
+      >
+        Pay Now{" "}
+      </Button>
+    </Box>
+  );
 };
 
 export default Payment;

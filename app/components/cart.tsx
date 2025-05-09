@@ -1,7 +1,15 @@
 "use client";
-import * as React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Box, Button, ButtonGroup, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Modal,
+  // SwipeableDrawer,
+  Typography,
+} from "@mui/material";
+import UserForm from "@/app/components/userForm";
 import Payment from "./payment/payment";
 
 interface CartItem {
@@ -24,13 +32,21 @@ interface BasicModalProps {
   setOpen: (open: boolean) => void;
 }
 
-export default function BasicModal({
+interface IFormInputs {
+  name: string;
+  phone: number;
+}
+
+const BasicModal: React.FC<BasicModalProps> = ({
   cart,
   open,
   handleDecrement,
   handleIncrement,
   setOpen,
-}: BasicModalProps) {
+}) => {
+  const [openForm, setOpenForm] = useState<boolean>(false);
+  const [user, setUser] = useState<IFormInputs>({ name: "", phone: 0 });
+
   const handleClose = () => setOpen(false);
 
   console.log({ cart });
@@ -48,6 +64,23 @@ export default function BasicModal({
     { key: "Handling charge", value: cart.length ? 10 : 0 },
     { key: "SMS charge", value: cart.length ? 5 : 0 },
   ];
+
+  const handleCheckOut = () => {
+    setOpenForm(true);
+  };
+
+  // const toggleDrawer =
+  //   (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+  //     if (
+  //       event &&
+  //       event.type === "keydown" &&
+  //       ((event as React.KeyboardEvent).key === "Tab" ||
+  //         (event as React.KeyboardEvent).key === "Shift")
+  //     ) {
+  //       return;
+  //     }
+  //     setOpenForm(open);
+  //   };
 
   return (
     <div>
@@ -70,7 +103,8 @@ export default function BasicModal({
             boxShadow: 24,
             top: "10%",
             maxHeight: "80vh",
-            overflow: "scroll",
+            // overflow: "scroll",
+            overflowX: "hidden",
           }}
         >
           {cart.length ? (
@@ -157,9 +191,9 @@ export default function BasicModal({
                   <Typography>₹{charges.value}</Typography>
                 </Box>
               ))}
-              <Box className="flex justify-between py-1">
+              <Box className="flex justify-between₹73.98 py-1">
                 <Typography fontWeight={600} fontSize={20}>
-                  Grand total
+                  Grand total{" "}
                 </Typography>
                 <Typography fontWeight={600} fontSize={20}>
                   ₹
@@ -170,9 +204,36 @@ export default function BasicModal({
               </Box>
             </Box>
           </Box>
-          <Payment />
+
+          {openForm && <UserForm setUser={setUser} setOpenForm={setOpenForm} />}
+
+          {!openForm && !user?.name && (
+            <Box className="flex justify-center" onClick={handleCheckOut}>
+              <Button variant="outlined">Check Out </Button>
+              {/* <SwipeableDrawer
+                anchor={"bottom"}
+                open={openForm}
+                onClose={toggleDrawer(false)}
+                onOpen={toggleDrawer(true)}
+              >
+                <Box
+                  sx={{
+                    width: "auto",
+                  }}
+                  role="presentation"
+                  onClick={toggleDrawer(false)}
+                  onKeyDown={toggleDrawer(false)}
+                >
+                  <UserForm setUser={setUser} setOpenForm={setOpenForm} />
+                </Box>
+              </SwipeableDrawer> */}
+            </Box>
+          )}
+          {user?.name && <Payment />}
         </Box>
       </Modal>
     </div>
   );
-}
+};
+
+export default BasicModal;
