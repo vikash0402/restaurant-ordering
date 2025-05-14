@@ -4995,16 +4995,18 @@ export namespace Prisma {
 
   export type CustomerAvgAggregateOutputType = {
     id: number | null
+    phone_number: number | null
   }
 
   export type CustomerSumAggregateOutputType = {
     id: number | null
+    phone_number: number | null
   }
 
   export type CustomerMinAggregateOutputType = {
     id: number | null
     name: string | null
-    phone_number: string | null
+    phone_number: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5012,7 +5014,7 @@ export namespace Prisma {
   export type CustomerMaxAggregateOutputType = {
     id: number | null
     name: string | null
-    phone_number: string | null
+    phone_number: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5029,10 +5031,12 @@ export namespace Prisma {
 
   export type CustomerAvgAggregateInputType = {
     id?: true
+    phone_number?: true
   }
 
   export type CustomerSumAggregateInputType = {
     id?: true
+    phone_number?: true
   }
 
   export type CustomerMinAggregateInputType = {
@@ -5149,7 +5153,7 @@ export namespace Prisma {
   export type CustomerGroupByOutputType = {
     id: number
     name: string
-    phone_number: string
+    phone_number: number
     createdAt: Date
     updatedAt: Date
     _count: CustomerCountAggregateOutputType | null
@@ -5223,7 +5227,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-      phone_number: string
+      phone_number: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["customer"]>
@@ -5652,7 +5656,7 @@ export namespace Prisma {
   interface CustomerFieldRefs {
     readonly id: FieldRef<"Customer", 'Int'>
     readonly name: FieldRef<"Customer", 'String'>
-    readonly phone_number: FieldRef<"Customer", 'String'>
+    readonly phone_number: FieldRef<"Customer", 'Int'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
     readonly updatedAt: FieldRef<"Customer", 'DateTime'>
   }
@@ -12215,7 +12219,7 @@ export namespace Prisma {
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     id?: IntFilter<"Customer"> | number
     name?: StringFilter<"Customer"> | string
-    phone_number?: StringFilter<"Customer"> | string
+    phone_number?: IntFilter<"Customer"> | number
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
@@ -12236,7 +12240,7 @@ export namespace Prisma {
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     name?: StringFilter<"Customer"> | string
-    phone_number?: StringFilter<"Customer"> | string
+    phone_number?: IntFilter<"Customer"> | number
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
@@ -12261,7 +12265,7 @@ export namespace Prisma {
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Customer"> | number
     name?: StringWithAggregatesFilter<"Customer"> | string
-    phone_number?: StringWithAggregatesFilter<"Customer"> | string
+    phone_number?: IntWithAggregatesFilter<"Customer"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
@@ -12758,7 +12762,7 @@ export namespace Prisma {
 
   export type CustomerCreateInput = {
     name: string
-    phone_number: string
+    phone_number: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -12767,7 +12771,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateInput = {
     id?: number
     name: string
-    phone_number: string
+    phone_number: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -12775,7 +12779,7 @@ export namespace Prisma {
 
   export type CustomerUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
+    phone_number?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -12784,7 +12788,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
+    phone_number?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -12793,14 +12797,14 @@ export namespace Prisma {
   export type CustomerCreateManyInput = {
     id?: number
     name: string
-    phone_number: string
+    phone_number: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type CustomerUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
+    phone_number?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12808,7 +12812,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
+    phone_number?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13415,6 +13419,7 @@ export namespace Prisma {
 
   export type CustomerAvgOrderByAggregateInput = {
     id?: SortOrder
+    phone_number?: SortOrder
   }
 
   export type CustomerMaxOrderByAggregateInput = {
@@ -13435,6 +13440,7 @@ export namespace Prisma {
 
   export type CustomerSumOrderByAggregateInput = {
     id?: SortOrder
+    phone_number?: SortOrder
   }
 
   export type MenuItemListRelationFilter = {
@@ -14614,7 +14620,7 @@ export namespace Prisma {
 
   export type CustomerCreateWithoutOrdersInput = {
     name: string
-    phone_number: string
+    phone_number: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14622,7 +14628,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutOrdersInput = {
     id?: number
     name: string
-    phone_number: string
+    phone_number: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14695,7 +14701,7 @@ export namespace Prisma {
 
   export type CustomerUpdateWithoutOrdersInput = {
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
+    phone_number?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14703,7 +14709,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: StringFieldUpdateOperationsInput | string
+    phone_number?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

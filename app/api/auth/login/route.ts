@@ -1,13 +1,9 @@
+import { ILoginInput } from "@/app/interface/apiInterface/auth.interface";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
-interface ContactFormData {
-  email: string;
-  password: string;
-}
-
 export async function POST(request: Request) {
-  const body: ContactFormData = await request.json();
+  const body: ILoginInput = await request.json();
 
   try {
     const { email, password } = body;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Box,
@@ -33,8 +33,27 @@ interface BasicModalProps {
 }
 
 interface IFormInputs {
+  id: number | null;
   name: string;
-  phone: number;
+  phone: number | null;
+}
+
+interface OrderPayload {
+  order: {
+    customerId: number | null;
+    status: string;
+    total_amount: number;
+    delivery_charge: number;
+    platform_charge: number;
+    sms_charge: number;
+    payment_status: boolean;
+  };
+  order_item: {
+    quantity: number;
+    unit_price: number;
+    orderId: number | null;
+    menuItemId: number;
+  }[];
 }
 
 const BasicModal: React.FC<BasicModalProps> = ({
@@ -45,7 +64,11 @@ const BasicModal: React.FC<BasicModalProps> = ({
   setOpen,
 }) => {
   const [openForm, setOpenForm] = useState<boolean>(false);
-  const [user, setUser] = useState<IFormInputs>({ name: "", phone: 0 });
+  const [user, setUser] = useState<IFormInputs>({
+    id: null,
+    name: "",
+    phone: null,
+  });
 
   const handleClose = () => setOpen(false);
 
@@ -66,7 +89,51 @@ const BasicModal: React.FC<BasicModalProps> = ({
   ];
 
   const handleCheckOut = () => {
+    console.log(cart);
     setOpenForm(true);
+  };
+
+  useEffect(() => {
+    console.log(user);
+    if (user.id) {
+      createOrder(user);
+    }
+  }, [user]);
+
+  const createOrder = async (user: IFormInputs) => {
+    const paylaod: OrderPayload = {
+      order: {
+        customerId: user.id,
+        status: "PENDING",
+        total_amount: chargesDetails[0].value,
+        delivery_charge: chargesDetails[1].value,
+        platform_charge: chargesDetails[2].value,
+        sms_charge: chargesDetails[3].value,
+        payment_status: false,
+      },
+
+      order_item: cart.map((item) => {
+        return {
+          quantity: item.quantity ?? 0,
+          unit_price: item.price,
+          orderId: null,
+          menuItemId: item.id,
+        };
+      }),
+    };
+    console.log({ paylaod });
+
+    if (user.id) {
+      const response = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paylaod),
+      });
+
+      const res = await response.json();
+
+      console.log({ res });
+    }
   };
 
   // const toggleDrawer =

@@ -8,20 +8,26 @@
 
 
 2. Add customer
-- when user add its, details save customer details.
-- mange state to mange current value of customer
-- create order with exising items where payment status is pending.
+- create api to crete new user. check if user presnet not create new one (Done)
+- when user add its, details save customer details. (Done)
+- mange state to mange current value of customer (Done)
+- Replace order item in order if have exising order with pending status else create new one.
+- Add a layer of invoice which have final button to pay, here listed item is not editable.
+- After payment done update the exising order status payment done.
+- Add the QR code home page after scan redirect to main menu.
+
 
 3. Order save flow 
--  Create modal to save order details -> till 12:00
--  Create order api
--  Integrate order api  
+- Create modal to save order details (Done)
+- Create order api (Done)
+- Integrate order api  (Done)
 
 4. Payment
 - Add payment method for rozerpay. (Done) 
 - Create a userfrom to add name, phone and email
 - Pass this name, phoneNo and email to rozerpay
-- After payment update the status in order table. 
+- After payment update the status in order table.
+- After payment send sms with payment status. 
 
 
 5. sms service for payment confirmation
@@ -37,4 +43,9 @@
 - where we put name of any website
 - it will create an qr which can be downloaded.
 
-8. Scan and visit to our website
+8. Dashboard
+- Card - No of Orders last 30 | no of visitors last 30 | total order value last 30
+- Click on order list table of all orders
+- Click on specific card, lead to open up new complete details of order.
+- Filter by any data range.
+- Add ab

@@ -1,7 +1,9 @@
 "use client";
+// import prisma from "@/lib/prisma";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface IFormInputs {
+  id: number;
   name: string;
   phone: number;
 }
@@ -18,9 +20,20 @@ const UserForm: React.FC<IUserForm> = ({ setUser, setOpenForm }) => {
     handleSubmit,
   } = useForm<IFormInputs>();
 
-  const onSubmit: SubmitHandler<IFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
     console.log(data);
-    setUser(data);
+
+    const response = await fetch("/api/customer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: data.name,
+        phone_number: data.phone,
+      }),
+    });
+
+    const res = await response.json();
+    setUser({ id: res.id, name: res.name, phone: res.phone });
     setOpenForm(false);
   };
 

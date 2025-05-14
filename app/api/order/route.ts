@@ -1,10 +1,10 @@
-// import prisma from "@/lib/prisma";
+import { OrderCreateInput } from "@/app/interface/apiInterface/order.interface";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
-  const order = {};
-  // const orders = await prisma.order.findMany({})
+  const orders = await prisma.order.findMany({});
 
-  return new Response(JSON.stringify(order), {
+  return new Response(JSON.stringify(orders), {
     status: 200,
     headers: {
       "Content-Type": "application/json",
@@ -12,19 +12,38 @@ export async function GET() {
   });
 }
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  message: string;
-}
-
 export async function POST(request: Request) {
-  const body: ContactFormData = await request.json();
+  const body: OrderCreateInput = await request.json();
 
+  const { order, order_item } = body;
   console.log("body ", body);
-  const newOrder = {};
 
-  return new Response(JSON.stringify(newOrder), {
+  const newObj = order_item.map((item) => {
+    delete item.orderId;
+    return item;
+  });
+
+  const response = await prisma.order.create({
+    data: {
+      delivery_charge: order.delivery_charge,
+      platform_charge: order.platform_charge,
+      sms_charge: order.sms_charge,
+      total_amount: order.total_amount,
+      customerId: Number(order.customerId),
+      payment_status: order.payment_status,
+      status: "PENDING",
+      orderItems: {
+        create: newObj,
+      },
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+
+  console.log(response);
+
+  return new Response(JSON.stringify(response), {
     status: 201,
     headers: {
       "Content-Type": "application/json",

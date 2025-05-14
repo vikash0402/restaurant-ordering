@@ -108,14 +108,6 @@ function Index() {
     quantity?: number;
   }
 
-  // interface CartItem {
-  //   description: string;
-  //   id: number;
-  //   image_url?: string;
-  //   name: string;
-  //   price: number;
-  // }
-
   const CartBadge = styled(Badge)`
     & .${badgeClasses.badge} {
       top: -12px;
@@ -148,13 +140,9 @@ function Index() {
 
   return (
     <div className="w-full">
-      <h2 className=" font-bold text-center text-2xl  ">Menu Items</h2>
-      <button
-        // onClick={opencart}
-        onClick={handleOpen}
-        className="absolute top-4 right-4 text-white px-4 py-2 rounded"
-      >
-        <IconButton>
+      <h2 className=" font-bold text-center text-2xl">Menu Items</h2>
+      <div className="absolute top-4 right-4 text-white px-4 py-2 rounded">
+        <IconButton onClick={handleOpen}>
           <ShoppingCartIcon fontSize="small" />
           <CartBadge
             badgeContent={cart.length}
@@ -162,7 +150,7 @@ function Index() {
             overlap="circular"
           />
         </IconButton>
-      </button>
+      </div>
       <div className="flex justify-center w-full ">
         <div
           className="flex gap-7 justify-center "
@@ -194,7 +182,7 @@ function Index() {
                 <span className="text-lg font-bold text-gray-700">
                   ${item.price.toFixed(2)}
                 </span>
-                <button
+                <button // onClick={opencart}
                   onClick={() => handleAddToCart(item)}
                   className={` ${
                     ifExist(item)

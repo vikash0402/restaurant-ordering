@@ -38,7 +38,7 @@ model Post {
 model Customer {
   id           Int      @id @default(autoincrement())
   name         String
-  phone_number String
+  phone_number Int
   orders       Order[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

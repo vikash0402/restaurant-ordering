@@ -1,16 +1,11 @@
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
+import { ISignupInput } from "@/app/interface/apiInterface/auth.interface";
 
 const saltRounds = 10;
 
-interface ContactFormData {
-  email: string;
-  name: string;
-  password: string;
-}
-
 export async function POST(request: Request) {
-  const body: ContactFormData = await request.json();
+  const body: ISignupInput = await request.json();
 
   const { email, name, password } = body;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
