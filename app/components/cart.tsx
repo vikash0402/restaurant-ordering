@@ -56,7 +56,7 @@ interface OrderPayload {
   }[];
 }
 
-const BasicModal: React.FC<BasicModalProps> = ({
+const CartModal: React.FC<BasicModalProps> = ({
   cart,
   open,
   handleDecrement,
@@ -71,8 +71,6 @@ const BasicModal: React.FC<BasicModalProps> = ({
   });
 
   const handleClose = () => setOpen(false);
-
-  console.log({ cart });
 
   const totalCharge = () => {
     return cart.reduce(
@@ -303,4 +301,4 @@ const BasicModal: React.FC<BasicModalProps> = ({
   );
 };
 
-export default BasicModal;
+export default CartModal;

@@ -2,7 +2,7 @@ import { status } from "@/app/constant/responseStatus";
 import { errorMessage, menuItemMessage } from "@/app/constant/responseMessage";
 import prisma from "@/lib/prisma";
 import { menuItemErrorCode } from "@/app/constant/errorCode";
-import { generateError } from "../_lib";
+import { generateError } from "@/app/api/_lib";
 
 export async function GET() {
   try {
@@ -16,7 +16,7 @@ export async function GET() {
         message: menuItemMessage.FETCH_SUCCESS,
       }),
       {
-        status: status.CREATED,
+        status: status.SUCCESS,
         headers: {
           "Content-Type": "application/json",
         },
@@ -49,12 +49,21 @@ export async function POST(request: Request) {
           image_url: "",
         },
       });
-      return new Response(JSON.stringify(response), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          statusCode: status.CREATED,
+          data: response,
+          message: menuItemMessage.CREATE_SUCCESS,
+        }),
+        {
+          status: status.CREATED,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     }
 
     const response = await prisma.menuItem.update({
@@ -64,12 +73,20 @@ export async function POST(request: Request) {
       data: body,
     });
 
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        statusCode: status.SUCCESS,
+        data: response,
+        message: menuItemMessage.UPDATE_SUCCESS,
+      }),
+      {
+        status: status.CREATED,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return generateError(
@@ -86,13 +103,20 @@ export async function DELETE(request: Request) {
   try {
     const body = await request.json();
     console.log(body);
-    const menuItems = await prisma.menuItem.deleteMany({});
-    return new Response(JSON.stringify(menuItems), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    await prisma.menuItem.deleteMany({});
+    return new Response(
+      JSON.stringify({
+        success: true,
+        statusCode: status.NO_CONTENT,
+        message: menuItemMessage.DELETE_SUCCESS,
+      }),
+      {
+        status: status.NO_CONTENT,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return generateError(

@@ -6,13 +6,15 @@ import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
-import BasicModal from "../components/cart";
-
-// import prisma from "@/lib/prisma";
+import CartModal from "../../components/cart";
+import {
+  ICartItem,
+  IMenuItem,
+} from "@/app/interface/clientInterface/menu.interface";
 
 function Index() {
-  const [menuItems, setMenuItems] = useState<MenuItem[] | []>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [menuItems, setMenuItems] = useState<IMenuItem[] | []>([]);
+  const [cart, setCart] = useState<ICartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = React.useState(false);
 
@@ -27,9 +29,9 @@ function Index() {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      console.log("Fetched menu items:", data);
-      setMenuItems(data);
+      const menuItem = await response.json();
+      console.log("Fetched menu items:", menuItem);
+      setMenuItems(menuItem.data);
     } catch (error) {
       console.error("Failed to fetch menu items:", error);
     } finally {
@@ -58,11 +60,7 @@ function Index() {
     fetchMenuItems();
   }, []);
 
-  const handleAddToCart = (item: CartItem) => {
-    console.log("Item added to cart:", item);
-    // const { customerId, available, createdAt, ...rest } = item;
-    // console.log("cartItem", customerId, available, createdAt);
-
+  const handleAddToCart = (item: ICartItem) => {
     const exists = cart.some((cartItem) => cartItem.id === item.id);
 
     if (exists) {
@@ -73,7 +71,7 @@ function Index() {
     }
   };
 
-  const ifExist = (item: MenuItem) => {
+  const ifExist = (item: IMenuItem) => {
     return cart.some((cartItem) => cartItem.id === item.id);
   };
 
@@ -83,29 +81,6 @@ function Index() {
         <h1 className="text-2xl font-bold">Loading...</h1>
       </div>
     );
-  }
-
-  interface MenuItem {
-    available: boolean;
-    createdAt?: string;
-    customerId?: number;
-    description: string;
-    id: number;
-    image_url?: string;
-    name: string;
-    price: number;
-  }
-
-  interface CartItem {
-    available: boolean;
-    createdAt?: string;
-    customerId?: number;
-    description: string;
-    id: number;
-    image_url?: string;
-    name: string;
-    price: number;
-    quantity?: number;
   }
 
   const CartBadge = styled(Badge)`
@@ -201,7 +176,7 @@ function Index() {
           ))}
         </div>
       </div>
-      <BasicModal
+      <CartModal
         open={open}
         setOpen={setOpen}
         cart={cart}

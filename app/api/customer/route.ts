@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   const payload = {
     name,
-    phone_number,
+    phone_number: Number(phone_number),
   };
 
   const newCustomer = await prisma.customer.create({

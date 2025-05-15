@@ -1,52 +1,219 @@
+import { orderErrorCode } from "@/app/constant/errorCode";
+import { errorMessage, orderMessage } from "@/app/constant/responseMessage";
+import { status } from "@/app/constant/responseStatus";
 import { OrderCreateInput } from "@/app/interface/apiInterface/order.interface";
 import prisma from "@/lib/prisma";
+import { generateError } from "../_lib";
 
 export async function GET() {
-  const orders = await prisma.order.findMany({});
-
-  return new Response(JSON.stringify(orders), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const orders = await prisma.order.findMany({});
+    return new Response(
+      JSON.stringify({
+        success: true,
+        statusCode: status.SUCCESS,
+        data: orders,
+        message: orderMessage.FETCH_SUCCESS,
+      }),
+      {
+        status: status.SUCCESS,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return generateError(
+        status.BAD_REQUEST,
+        orderErrorCode.ORDER_ERR_CODE_002,
+        error.message,
+        errorMessage.OrderItem.NOT_FOUND
+      );
+    }
+  }
 }
 
 export async function POST(request: Request) {
   const body: OrderCreateInput = await request.json();
 
-  const { order, order_item } = body;
-  console.log("body ", body);
+  try {
+    const { order, order_item } = body;
+    console.log("body ", body);
 
-  const newObj = order_item.map((item) => {
-    delete item.orderId;
-    return item;
-  });
+    const newObj = order_item.map((item) => {
+      delete item.orderId;
+      return item;
+    });
 
-  const response = await prisma.order.create({
-    data: {
-      delivery_charge: order.delivery_charge,
-      platform_charge: order.platform_charge,
-      sms_charge: order.sms_charge,
-      total_amount: order.total_amount,
-      customerId: Number(order.customerId),
-      payment_status: order.payment_status,
-      status: "PENDING",
-      orderItems: {
-        create: newObj,
+    const pendingOrder = await prisma.order.findFirst({
+      where: {
+        customerId: Number(order.customerId),
+        status: "PENDING",
       },
-    },
-    include: {
-      orderItems: true,
-    },
-  });
+    });
 
-  console.log(response);
+    let updatedResposne;
 
-  return new Response(JSON.stringify(response), {
-    status: 201,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+    if (pendingOrder) {
+      // updatedResposne = await prisma.order.update({
+      //   where: {
+      //     id: pendingOrder.id,
+      //   },
+      //   data: {
+      //     total_amount: order.total_amount,
+      //     orderItems: {console.log("new order create  ", newOrder.id);
+      //       create: order_item,
+      //     },
+      //   },
+      //   include: {
+      //     orderItems: true,
+      //   },
+      // });
+
+      const deleteOrder = await prisma.$transaction([
+        prisma.orderItem.deleteMany({
+          where: {
+            orderId: pendingOrder.id,
+          },
+        }),
+        prisma.order.delete({
+          where: {
+            id: pendingOrder.id,
+          },
+        }),
+      ]);
+
+      // await prisma.$transaction(async (tx) => {
+      //   // Get all current items in the DB for this order
+      //   const existingItems = await tx.orderItem.findMany({
+      //     where: { orderId: pendingOrder.id },
+      //     select: { id: true, menuItemId: true },
+      //   });
+
+      //   const existingMenuItemIds = existingItems.map(
+      //     (item) => item.menuItemId
+      //   );
+
+      //   const incomingMenuItemIds: number[] = updatedItems.map((item) => item.menuItemId);
+
+      //   // Step 1: Upsert each item
+      //   for (const item of updatedItems) {
+      //     const existing = existingItems.find(
+      //       (i) => i.menuItemId === item.menuItemId
+      //     );
+
+      //     if (existing) {
+      //       // Update existing item
+      //       await tx.orderItem.update({
+      //         where: { id: existing.id },
+      //         data: {
+      //           quantity: item.quantity,
+      //           unit_price: item.unit_price,
+      //         },
+      //       });
+      //     } else {
+      //       // Create new item
+      //       await tx.orderItem.create({
+      //         data: {
+      //           orderId: pendingOrder.id,
+      //           menuItemId: item.menuItemId,
+      //           quantity: item.quantity,
+      //           unit_price: item.unit_price,
+      //         },
+      //       });
+      //     }
+      //   }
+
+      //   // Step 2: Remove items that are no longer present
+      //   const menuItemIdsToKeep = new Set(incomingMenuItemIds);
+
+      //   await tx.orderItem.deleteMany({
+      //     where: {
+      //       orderId: pendingOrder.id,
+      //       NOT: {
+      //         menuItemId: { in: Array.from(menuItemIdsToKeep) },
+      //       },
+      //     },
+      //   });
+
+      //   // Optional: Recalculate and update order total
+      //   const newTotal = updatedItems.reduce(
+      //     (sum, item) => sum + item.quantity * item.unit_price,
+      //     0
+      //   );
+
+      //   await tx.order.update({
+      //     where: { id: pendingOrder.id },
+      //     data: {
+      //       total_amount: newTotal,
+      //     },
+      //   });
+      // });
+
+      console.log("pending order id get deleted ", pendingOrder.id);
+
+      console.log({ deleteOrder });
+    }
+
+    if (updatedResposne)
+      return new Response(
+        JSON.stringify({
+          success: true,
+          statusCode: status.SUCCESS,
+          data: updatedResposne,
+          message: orderMessage.UPDATE_SUCCESS,
+        }),
+        {
+          status: status.SUCCESS,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+    const newOrder = await prisma.order.create({
+      data: {
+        delivery_charge: order.delivery_charge,
+        platform_charge: order.platform_charge,
+        sms_charge: order.sms_charge,
+        total_amount: order.total_amount,
+        customerId: Number(order.customerId),
+        payment_status: order.payment_status,
+        status: "PENDING",
+        orderItems: {
+          create: newObj,
+        },
+      },
+      include: {
+        orderItems: true,
+      },
+    });
+
+    console.log("new order create  ", newOrder.id);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        statusCode: status.CREATED,
+        data: newOrder,
+        message: orderMessage.CREATE_SUCCESS,
+      }),
+      {
+        status: status.CREATED,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return generateError(
+        status.INTERNAL_SERVER_ERROR,
+        orderErrorCode.ORDER_ERR_CODE_002,
+        error.message,
+        errorMessage.OrderItem.UPDATE_FAILED
+      );
+    }
+  }
 }

@@ -1,4 +1,5 @@
 "use client";
+// import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface IFormInputs {
@@ -13,6 +14,8 @@ const Login: React.FC = () => {
     handleSubmit,
   } = useForm<IFormInputs>();
 
+  // const [user, setUser] = useState({});
+
   const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
@@ -20,7 +23,11 @@ const Login: React.FC = () => {
       body: JSON.stringify(data),
     });
 
-    console.log(response);
+    const user = await response.json();
+
+    console.log("data", user.data);
+
+    // setUser(user?.data);
   };
 
   return (
