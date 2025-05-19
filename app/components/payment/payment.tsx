@@ -4,7 +4,11 @@ import React, { useEffect } from "react";
 // Declare Razorpay types if not available
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: {
+      new (options: RazorpayOptions): {
+        open: () => void;
+      };
+    };
   }
 }
 
@@ -29,19 +33,51 @@ interface RazorpayOptions {
   };
 }
 
-const Payment: React.FC = () => {
+interface PaymentProps {
+  amount: number;
+  customerName: string;
+  contact: number;
+  orderId: number;
+}
+
+const Payment: React.FC<PaymentProps> = ({
+  amount,
+  customerName,
+  contact,
+  orderId,
+}) => {
+  const updatePaymentStatus = async (paymentId: string) => {
+    const data = { status: "PAID", paymentId: paymentId };
+
+    console.log("payment payload", data);
+    console.log("order id", orderId);
+    const updateOrderEndpoint = `/api/order/${orderId}`;
+
+    const response = await fetch(updateOrderEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const payment = await response.json();
+    if (payment?.success === true) {
+      console.log("payment sucessfully done");
+    }
+  };
+
+  console.log({ amount, customerName, contact });
   const options: RazorpayOptions = {
     key: "rzp_test_HJG5Rtuy8Xh2NB",
-    amount: "100",
-    name: "Acme shop",
-    description: "some description",
+    amount: `${Math.round(amount * 100)}`,
+    name: "Vikas Restaurant",
+    description: "The Heartbeat of Indian Flavor.",
     image: "https://cdn.razorpay.com/logos/7K3b6d18wHwKzL_medium.png",
-    handler: function (response) {
-      alert(response.razorpay_payment_id);
+    handler: function (data) {
+      alert(data.razorpay_payment_id);
+      updatePaymentStatus(data.razorpay_payment_id);
     },
     prefill: {
-      name: "Gaurav",
-      contact: "9999999999",
+      name: customerName,
+      contact: contact.toString(),
       email: "demo@demo.com",
     },
     notes: {

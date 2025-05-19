@@ -1,5 +1,4 @@
 "use client";
-// import prisma from "@/lib/prisma";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface IFormInputs {
@@ -9,11 +8,17 @@ interface IFormInputs {
 }
 
 interface IUserForm {
-  setOpenForm: (data: boolean) => void;
+  isLoading: boolean;
+  setIsLoading: (data: boolean) => void;
+  // setOpenForm: (data: boolean) => void;
   setUser: (data: IFormInputs) => void;
 }
 
-const UserForm: React.FC<IUserForm> = ({ setUser, setOpenForm }) => {
+const UserForm: React.FC<IUserForm> = ({
+  setUser,
+  setIsLoading,
+  isLoading,
+}) => {
   const {
     register,
     formState: { errors },
@@ -22,6 +27,7 @@ const UserForm: React.FC<IUserForm> = ({ setUser, setOpenForm }) => {
 
   const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
     console.log(data);
+    setIsLoading(true);
 
     const response = await fetch("/api/customer", {
       method: "POST",
@@ -34,7 +40,7 @@ const UserForm: React.FC<IUserForm> = ({ setUser, setOpenForm }) => {
 
     const res = await response.json();
     setUser({ id: res.id, name: res.name, phone: res.phone });
-    setOpenForm(false);
+    // setOpenForm(false);
   };
 
   return (
@@ -70,9 +76,10 @@ const UserForm: React.FC<IUserForm> = ({ setUser, setOpenForm }) => {
         )}
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
         >
-          submit
+          {isLoading ? "loading..." : "submit"}
         </button>
       </form>
     </div>

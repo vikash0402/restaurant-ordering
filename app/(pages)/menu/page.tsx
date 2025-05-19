@@ -39,23 +39,6 @@ function Index() {
     }
   };
 
-  // const addToCart = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch("/api/menu");
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //     const data = await response.json();
-  //     console.log("Fetched menu items:", data);
-  //     setMenuItems(data);
-  //   } catch (error) {
-  //     console.error("Failed to fetch menu items:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   useEffect(() => {
     fetchMenuItems();
   }, []);

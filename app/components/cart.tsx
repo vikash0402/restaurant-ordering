@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import UserForm from "@/app/components/userForm";
 import Payment from "./payment/payment";
+import { OrderResponse } from "../interface/clientInterface/order.interface";
 
 interface CartItem {
   available: boolean;
@@ -26,6 +27,7 @@ interface CartItem {
 
 interface BasicModalProps {
   cart: CartItem[];
+  // setCart: () => void;
   open: boolean;
   handleDecrement: (index: number) => void;
   handleIncrement: (index: number) => void;
@@ -70,6 +72,10 @@ const CartModal: React.FC<BasicModalProps> = ({
     phone: null,
   });
 
+  const [orderResponce, setOrderResponce] = useState<OrderResponse | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(false);
   const handleClose = () => setOpen(false);
 
   const totalCharge = () => {
@@ -78,6 +84,8 @@ const CartModal: React.FC<BasicModalProps> = ({
       0
     );
   };
+
+  console.log({ orderResponce });
 
   const chargesDetails: { key: string; value: number }[] = [
     { key: "Items total", value: totalCharge() },
@@ -119,6 +127,7 @@ const CartModal: React.FC<BasicModalProps> = ({
         };
       }),
     };
+
     console.log({ paylaod });
 
     if (user.id) {
@@ -130,7 +139,21 @@ const CartModal: React.FC<BasicModalProps> = ({
 
       const res = await response.json();
 
-      console.log({ res });
+      if (res.success === true) {
+        const data: OrderResponse = res.data;
+        setOrderResponce({
+          ...data,
+          grand_total:
+            data.total_amount +
+            data.sms_charge +
+            data.delivery_charge +
+            data.platform_charge,
+        });
+      }
+      console.log("order response", res);
+
+      setIsLoading(false);
+      setOpenForm(false);
     }
   };
 
@@ -270,7 +293,13 @@ const CartModal: React.FC<BasicModalProps> = ({
             </Box>
           </Box>
 
-          {openForm && <UserForm setUser={setUser} setOpenForm={setOpenForm} />}
+          {openForm && (
+            <UserForm
+              setUser={setUser}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
+          )}
 
           {!openForm && !user?.name && (
             <Box className="flex justify-center" onClick={handleCheckOut}>
@@ -294,7 +323,14 @@ const CartModal: React.FC<BasicModalProps> = ({
               </SwipeableDrawer> */}
             </Box>
           )}
-          {user?.name && <Payment />}
+          {user?.name && (
+            <Payment
+              amount={orderResponce?.grand_total ?? 0}
+              contact={user.phone ?? 0}
+              customerName={user.name}
+              orderId={Number(orderResponce?.id)}
+            />
+          )}
         </Box>
       </Modal>
     </div>

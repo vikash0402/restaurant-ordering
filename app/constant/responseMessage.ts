@@ -45,6 +45,11 @@ export const orderMessage = {
   CREATE_SUCCESS: "Order created successfully",
 };
 
+export const paymentMessage = {
+  PAYMENT_SUCCESS: "Payment done successfully",
+  PAYMENT_FAILED: "Payment failed",
+};
+
 export const orderItemMessage = {
   FETCH_SUCCESS: "Order item fetched successfully",
   UPDATE_SUCCESS: "Order item updated successfully",
@@ -81,6 +86,13 @@ export const errorMessage = {
     UPDATE_FAILED: "Failed to update Customer",
     DELETE_FAILED: "Failed to delete Customer",
     UNAUTHORIZED: "You are not authorized to modify this Customer",
+  },
+  Order: {
+    NOT_FOUND: "Post not found",
+    CREATE_FAILED: "Failed to create Order",
+    UPDATE_FAILED: "Failed to update Order",
+    DELETE_FAILED: "Failed to delete Order",
+    UNAUTHORIZED: "You are not authorized to modify this Order",
   },
   OrderItem: {
     NOT_FOUND: "Post not found",

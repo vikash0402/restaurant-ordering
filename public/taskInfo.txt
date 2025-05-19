@@ -11,7 +11,7 @@
 - create api to crete new user. check if user presnet not create new one (Done)
 - when user add its, details save customer details. (Done)
 - mange state to mange current value of customer (Done)
-- Replace order item in order if have exising order with pending status else create new one.
+- If we have existing order for with pending state is delete and create one, else create new one. (Done)
 - Add a layer of invoice which have final button to pay, here listed item is not editable.
 - After payment done update the exising order status payment done.
 - Add the QR code home page after scan redirect to main menu.
@@ -24,8 +24,8 @@
 
 4. Payment
 - Add payment method for rozerpay. (Done) 
-- Create a userfrom to add name, phone and email
-- Pass this name, phoneNo and email to rozerpay
+- Create a userfrom to add name, phone (Done)
+- Pass this name, phoneNo and email to rozerpay (Done)
 - After payment update the status in order table.
 - After payment send sms with payment status. 
 

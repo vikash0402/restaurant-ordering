@@ -7,7 +7,21 @@ import { generateError } from "../_lib";
 
 export async function GET() {
   try {
-    const orders = await prisma.order.findMany({});
+    const orders = await prisma.order.findMany({
+      where: {
+        customerId: 4,
+      },
+      include: {
+        orderItems: {
+          include: {
+            item: true,
+          },
+        },
+      },
+    });
+
+    console.log("getallorders ", orders);
+
     return new Response(
       JSON.stringify({
         success: true,
