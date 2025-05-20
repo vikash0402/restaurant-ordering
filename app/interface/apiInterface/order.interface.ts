@@ -8,6 +8,26 @@ interface IOrders {
   payment_status: boolean;
 }
 
+export interface OrderItemWithName {
+  id: number;
+  quantity: number;
+  unit_price: number;
+  orderId: number;
+  menuItemId: number;
+  createdAt: string | Date; // ISO 8601 date string
+  item?: {
+    name?: string;
+  };
+}
+
+export interface SingleOrder {
+  orderId: number;
+  orderItem: string;
+  total: number;
+  date: string;
+  status: boolean;
+}
+
 interface IOrderItem {
   quantity: number;
   unit_price: number;

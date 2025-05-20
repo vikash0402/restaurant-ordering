@@ -2,64 +2,104 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-// import { OrderResponse } from "@/app/interface/clientInterface/order.interface";
-// OrderResponse[]
-async function Index() {
-  const response = await fetch("http://localhost:3000/api/order");
-  const order = await response.json();
+import Link from "next/link";
+import { SingleOrder } from "@/app/interface/apiInterface/order.interface";
+import CancelIcon from "@mui/icons-material/Cancel";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
-  console.log(" orderswegethere", JSON.stringify(order));
+interface Props {
+  searchParams: Promise<{ customerId?: string }>;
+}
+
+async function Orders({ searchParams }: Props) {
+  const { customerId } = await searchParams;
+
+  const response = await fetch(
+    `http://localhost:3000/api/order?customerId=${customerId}`,
+    {
+      cache: "default",
+    }
+  );
+  const orders: SingleOrder[] = (await response.json()).data;
+
+  if (!customerId) {
+    return (
+      <Box className="flex flex-col w-full ">
+        <Box className="bg-gray-200 py-3 text-center ">
+          <Typography fontWeight={600}>No Customer Id</Typography>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box className="flex flex-col w-full ">
       <Box className="bg-gray-200 py-3 text-center ">
         <Typography fontWeight={600}>PAST ORDERS</Typography>
       </Box>
-      {[1, 2, 3, 4, 5].map((order, index: number) => (
-        <Box key={index} className="flex flex-col mx-5 border-b-2">
-          <Box className="flex w-full justify-between pt-5 pb-3">
-            <Box>
-              <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
-                Vikash Resturant
-              </Typography>
-              <Typography sx={{ fontSize: "14px", color: "gray" }}>
-                Sudma Nagar
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  color: "gray",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                ₹209.0
-                <KeyboardArrowRightIcon
-                  sx={{ fontSize: "20px", color: "gray" }}
-                />
-              </Typography>
+      {orders.length &&
+        orders.map((order) => (
+          <Box key={order.orderId} className="flex flex-col mx-5 border-b-2">
+            <Box className="flex w-full justify-between pt-5 pb-3">
+              <Box>
+                <Typography sx={{ fontWeight: 500, fontSize: "16px" }}>
+                  Vikash Resturant
+                </Typography>
+                <Typography sx={{ fontSize: "14px", color: "gray" }}>
+                  Sudma Nagar
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    color: "gray",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  ₹{order.total}
+                  <KeyboardArrowRightIcon
+                    sx={{ fontSize: "20px", color: "gray" }}
+                  />
+                </Typography>
+              </Box>
+              {order.status === true ? (
+                <Box className="flex gap-1.5 justify-center align-middle font-extralight text-gray-500">
+                  <Typography> Delivered</Typography>
+                  <CheckCircleIcon
+                    sx={{ color: "#00f721", fontSize: "20px" }}
+                  />
+                </Box>
+              ) : (
+                <Box className="flex gap-1.5 justify-center align-middle font-extralight text-gray-500">
+                  <Typography> Not Delivered</Typography>
+                  <CancelIcon sx={{ color: "red", fontSize: "20px" }} />
+                </Box>
+              )}
             </Box>
-            <Box className="flex gap-1.5 justify-center align-middle font-extralight text-gray-500">
-              <Typography> Delivered</Typography>
-              <CheckCircleIcon sx={{ color: "#00f721", fontSize: "20px" }} />
+            <div
+              // style={{ borderBlockStart: "2px" }}
+              className="w-full border-t border-dotted  "
+            ></div>
+            <Box className="flex justify-between">
+              <Box className=" pb-4 pt-3">
+                <Typography sx={{ fontSize: "16px", color: "gray" }}>
+                  {order.orderItem}{" "}
+                </Typography>
+                <Typography sx={{ fontSize: "14px", color: "#515352" }}>
+                  {order.date}
+                </Typography>
+              </Box>
+              <Link href={`/menu/orders/${order.orderId}`}>
+                <Box className="flex gap-1.5 items-center">
+                  <Typography>View</Typography>
+                  <VisibilityIcon color="success" />
+                </Box>
+              </Link>
             </Box>
           </Box>
-          <div
-            // style={{ borderBlockStart: "2px" }}
-            className="w-full border-t border-dotted  "
-          ></div>
-          <Box className="pb-4 pt-3">
-            <Typography sx={{ fontSize: "16px", color: "gray" }}>
-              Amul Masti Dahi * 2, Parle Kurkure * 4, Maggi * 5{" "}
-            </Typography>
-            <Typography sx={{ fontSize: "14px", color: "#515352" }}>
-              May 6, 11:18 PM
-            </Typography>
-          </Box>
-        </Box>
-      ))}
+        ))}
     </Box>
   );
 }
 
-export default Index;
+export default Orders;

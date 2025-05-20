@@ -1,32 +1,96 @@
 import { orderErrorCode } from "@/app/constant/errorCode";
 import { errorMessage, orderMessage } from "@/app/constant/responseMessage";
 import { status } from "@/app/constant/responseStatus";
-import { OrderCreateInput } from "@/app/interface/apiInterface/order.interface";
+import {
+  OrderCreateInput,
+  OrderItemWithName,
+} from "@/app/interface/apiInterface/order.interface";
 import prisma from "@/lib/prisma";
 import { generateError } from "../_lib";
 
-export async function GET() {
+function formatDate(isoDateString: string): string {
+  const date = new Date(isoDateString);
+
+  type optionalType = "numeric" | "2-digit" | undefined;
+
+  interface IOptions {
+    day: optionalType;
+    month: optionalType | "short" | "long" | "narrow";
+    hour: optionalType;
+    minute: optionalType;
+    hour12: boolean;
+  }
+  const options: IOptions = {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+
+  const formatted = date.toLocaleString("en-US", options);
+
+  return formatted;
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const customerId = searchParams.get("customerId"); // Access the value of the 'query' parameter
+
+  console.log({ customerId });
+
   try {
     const orders = await prisma.order.findMany({
       where: {
-        customerId: 4,
+        customerId: Number(customerId),
       },
       include: {
         orderItems: {
           include: {
-            item: true,
+            item: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
     });
 
-    console.log("getallorders ", orders);
+    interface Orders {
+      orderId: number;
+      orderItem: string;
+      total: number;
+      date: string;
+      status: boolean;
+    }
+
+    const createOrderString = (orderItems: OrderItemWithName[]): string => {
+      const orderArr = orderItems.map((el) => {
+        return `${el.quantity} ⨯ ${el.item?.name}`;
+      });
+      const orderStr = orderArr.join(", ");
+      return orderStr;
+    };
+
+    const allOrders: Orders[] = orders.map((order) => ({
+      orderId: order.id,
+      orderItem: createOrderString(order.orderItems),
+      total:
+        order.total_amount +
+        order.platform_charge +
+        order.sms_charge +
+        order.delivery_charge,
+      date: formatDate(order.createdAt.toISOString()),
+      status: order.status === "PAID",
+    }));
 
     return new Response(
       JSON.stringify({
         success: true,
         statusCode: status.SUCCESS,
-        data: orders,
+        data: allOrders,
         message: orderMessage.FETCH_SUCCESS,
       }),
       {

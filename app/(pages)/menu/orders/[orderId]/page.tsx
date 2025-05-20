@@ -3,7 +3,9 @@ import { Box, Divider, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DoneIcon from "@mui/icons-material/Done";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Link from "next/link";
+// import Link from "next/link";
+import BackButton from "@/app/components/backButton";
+
 type KeyValueDetail = {
   key: string;
   value: number;
@@ -45,9 +47,9 @@ async function page({ params }: { params: Promise<{ orderId: string }> }) {
       <Box>
         <Box className="flex justify-start p-2 gap-2">
           <Box>
-            <Link href="/menu/orders">
+            <BackButton className="">
               <ArrowBackIcon />
-            </Link>
+            </BackButton>
           </Box>
           <Box>
             <Typography fontWeight={600}>
