@@ -5,7 +5,11 @@ import QRCode from "react-qr-code";
 
 function GenerateScanner() {
   const qrRef = useRef<HTMLDivElement>(null);
-  const value: string = "http://localhost:3000/menu"; // Your QR content
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.BASE_URL
+      : "http://localhost:3000";
+  const value: string = `${baseUrl}/menu`; // Your QR content
 
   const downloadQR = () => {
     const svg = qrRef.current?.querySelector("svg");

@@ -14,8 +14,13 @@ interface Props {
 async function Orders({ searchParams }: Props) {
   const { customerId } = await searchParams;
 
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.BASE_URL
+      : "http://localhost:3000";
+
   const response = await fetch(
-    `http://localhost:3000/api/order?customerId=${customerId}`,
+    `${baseUrl}/api/order?customerId=${customerId}`,
     {
       cache: "default",
     }

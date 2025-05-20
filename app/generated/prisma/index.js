@@ -253,7 +253,7 @@ const config = {
   },
   "inlineSchema": "// This is your Prisma schema file,\n// Learn more at https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Admin {\n  id            Int      @id @default(autoincrement())\n  name          String\n  email         String   @unique\n  password_hash String\n  createdAt     DateTime @default(now())\n}\n\nmodel User {\n  id    Int     @id @default(autoincrement())\n  email String  @unique\n  name  String?\n  posts Post[]\n}\n\nmodel Post {\n  id        Int     @id @default(autoincrement())\n  title     String\n  content   String?\n  published Boolean @default(false)\n  authorId  Int\n  author    User    @relation(fields: [authorId], references: [id])\n}\n\nmodel Customer {\n  id           Int      @id @default(autoincrement())\n  name         String\n  phone_number Int      @unique\n  orders       Order[]\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n}\n\nmodel Category {\n  id          Int        @id @default(autoincrement())\n  name        String\n  description String?\n  createdAt   DateTime   @default(now())\n  updatedAt   DateTime   @updatedAt\n  menuItems   MenuItem[]\n}\n\nmodel MenuItem {\n  id          Int         @id @default(autoincrement())\n  name        String\n  description String?\n  price       Float\n  image_url   String?\n  available   Boolean     @default(true)\n  categoryId  Int\n  category    Category    @relation(fields: [categoryId], references: [id])\n  createdAt   DateTime    @default(now())\n  orderItems  OrderItem[]\n}\n\nenum OrderStatus {\n  PENDING\n  PAID\n  CANCELLED\n}\n\nmodel Order {\n  id              Int           @id @default(autoincrement())\n  customerId      Int\n  customer        Customer      @relation(fields: [customerId], references: [id])\n  status          OrderStatus   @default(PENDING)\n  total_amount    Float\n  platform_charge Float\n  sms_charge      Float\n  delivery_charge Float\n  orderItems      OrderItem[]\n  payment_status  Boolean       @default(false)\n  createdAt       DateTime      @default(now())\n  transactions    Transaction[]\n}\n\nmodel OrderItem {\n  id         Int      @id @default(autoincrement())\n  quantity   Int\n  unit_price Float\n  orderId    Int\n  order      Order    @relation(fields: [orderId], references: [id])\n  menuItemId Int\n  item       MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)\n  createdAt  DateTime @default(now())\n}\n\nmodel Transaction {\n  id                  Int         @id @default(autoincrement())\n  orderId             Int\n  order               Order       @relation(fields: [orderId], references: [id])\n  rozer_transation_id String\n  amount              Float\n  status              OrderStatus @default(PENDING)\n  createdAt           DateTime    @default(now())\n}\n",
   "inlineSchemaHash": "f5700fb8dd9428d1ffa5fd2394cbb49e17c1a4f4c42bb58bd9ed44e612770480",
-  "copyEngine": true
+  "copyEngine": false
 }
 
 const fs = require('fs')
@@ -290,9 +290,3 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
-// file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node");
-path.join(process.cwd(), "app/generated/prisma/libquery_engine-debian-openssl-1.1.x.so.node")
-// file annotations for bundling tools to include these files
-path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "app/generated/prisma/schema.prisma")

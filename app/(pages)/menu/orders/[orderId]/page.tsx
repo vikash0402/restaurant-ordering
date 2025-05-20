@@ -27,7 +27,12 @@ interface ResponseData {
 }
 
 async function fetchOrderDetails(id: number): Promise<ResponseData> {
-  const res = await fetch("http://localhost:3000/api/order/" + id, {
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.BASE_URL
+      : "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/order/` + id, {
     cache: "no-store", // disables caching
   });
 
