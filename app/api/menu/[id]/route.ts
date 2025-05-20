@@ -6,12 +6,13 @@ import { generateError } from "../../_lib";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const menuItems = await prisma.menuItem.findFirst({
       where: {
-        id: Number(params.id),
+        id: Number(id),
       },
     });
 
@@ -52,14 +53,15 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  console.log(request);
+  const { id } = await params;
+
   try {
     const body = await request.json();
     const menuItems = await prisma.menuItem.update({
       where: {
-        id: Number(params.id),
+        id: Number(id),
       },
       data: body,
     });
@@ -101,14 +103,16 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+
   try {
     const body = await request.json();
     console.log(body);
     const menuItems = await prisma.menuItem.delete({
       where: {
-        id: Number(params.id),
+        id: Number(id),
       },
     });
 
