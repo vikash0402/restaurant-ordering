@@ -5000,13 +5000,13 @@ export namespace Prisma {
 
   export type CustomerSumAggregateOutputType = {
     id: number | null
-    phone_number: number | null
+    phone_number: bigint | null
   }
 
   export type CustomerMinAggregateOutputType = {
     id: number | null
     name: string | null
-    phone_number: number | null
+    phone_number: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5014,7 +5014,7 @@ export namespace Prisma {
   export type CustomerMaxAggregateOutputType = {
     id: number | null
     name: string | null
-    phone_number: number | null
+    phone_number: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5153,7 +5153,7 @@ export namespace Prisma {
   export type CustomerGroupByOutputType = {
     id: number
     name: string
-    phone_number: number
+    phone_number: bigint
     createdAt: Date
     updatedAt: Date
     _count: CustomerCountAggregateOutputType | null
@@ -5227,7 +5227,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-      phone_number: number
+      phone_number: bigint
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["customer"]>
@@ -5656,7 +5656,7 @@ export namespace Prisma {
   interface CustomerFieldRefs {
     readonly id: FieldRef<"Customer", 'Int'>
     readonly name: FieldRef<"Customer", 'String'>
-    readonly phone_number: FieldRef<"Customer", 'Int'>
+    readonly phone_number: FieldRef<"Customer", 'BigInt'>
     readonly createdAt: FieldRef<"Customer", 'DateTime'>
     readonly updatedAt: FieldRef<"Customer", 'DateTime'>
   }
@@ -12025,6 +12025,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -12219,7 +12233,7 @@ export namespace Prisma {
     NOT?: CustomerWhereInput | CustomerWhereInput[]
     id?: IntFilter<"Customer"> | number
     name?: StringFilter<"Customer"> | string
-    phone_number?: IntFilter<"Customer"> | number
+    phone_number?: BigIntFilter<"Customer"> | bigint | number
     createdAt?: DateTimeFilter<"Customer"> | Date | string
     updatedAt?: DateTimeFilter<"Customer"> | Date | string
     orders?: OrderListRelationFilter
@@ -12236,7 +12250,7 @@ export namespace Prisma {
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    phone_number?: number
+    phone_number?: bigint | number
     AND?: CustomerWhereInput | CustomerWhereInput[]
     OR?: CustomerWhereInput[]
     NOT?: CustomerWhereInput | CustomerWhereInput[]
@@ -12265,7 +12279,7 @@ export namespace Prisma {
     NOT?: CustomerScalarWhereWithAggregatesInput | CustomerScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Customer"> | number
     name?: StringWithAggregatesFilter<"Customer"> | string
-    phone_number?: IntWithAggregatesFilter<"Customer"> | number
+    phone_number?: BigIntWithAggregatesFilter<"Customer"> | bigint | number
     createdAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Customer"> | Date | string
   }
@@ -12762,7 +12776,7 @@ export namespace Prisma {
 
   export type CustomerCreateInput = {
     name: string
-    phone_number: number
+    phone_number: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -12771,7 +12785,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateInput = {
     id?: number
     name: string
-    phone_number: number
+    phone_number: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -12779,7 +12793,7 @@ export namespace Prisma {
 
   export type CustomerUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: IntFieldUpdateOperationsInput | number
+    phone_number?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -12788,7 +12802,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: IntFieldUpdateOperationsInput | number
+    phone_number?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -12797,14 +12811,14 @@ export namespace Prisma {
   export type CustomerCreateManyInput = {
     id?: number
     name: string
-    phone_number: number
+    phone_number: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type CustomerUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: IntFieldUpdateOperationsInput | number
+    phone_number?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12812,7 +12826,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: IntFieldUpdateOperationsInput | number
+    phone_number?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13399,6 +13413,17 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
   export type OrderListRelationFilter = {
     every?: OrderWhereInput
     some?: OrderWhereInput
@@ -13441,6 +13466,22 @@ export namespace Prisma {
   export type CustomerSumOrderByAggregateInput = {
     id?: SortOrder
     phone_number?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type MenuItemListRelationFilter = {
@@ -13842,6 +13883,14 @@ export namespace Prisma {
     connectOrCreate?: OrderCreateOrConnectWithoutCustomerInput | OrderCreateOrConnectWithoutCustomerInput[]
     createMany?: OrderCreateManyCustomerInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type OrderUpdateManyWithoutCustomerNestedInput = {
@@ -14271,6 +14320,33 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -14620,7 +14696,7 @@ export namespace Prisma {
 
   export type CustomerCreateWithoutOrdersInput = {
     name: string
-    phone_number: number
+    phone_number: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14628,7 +14704,7 @@ export namespace Prisma {
   export type CustomerUncheckedCreateWithoutOrdersInput = {
     id?: number
     name: string
-    phone_number: number
+    phone_number: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14701,7 +14777,7 @@ export namespace Prisma {
 
   export type CustomerUpdateWithoutOrdersInput = {
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: IntFieldUpdateOperationsInput | number
+    phone_number?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14709,7 +14785,7 @@ export namespace Prisma {
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    phone_number?: IntFieldUpdateOperationsInput | number
+    phone_number?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

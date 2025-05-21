@@ -109,15 +109,15 @@ function Index() {
           />
         </IconButton>
       </div>
-      <div className="flex justify-center w-full ">
+      <div className="flex justify-center p-5">
         <div
-          className="flex justify-center gap-7 flex-wrap mt-3 "
-          style={{ flexWrap: "wrap" }}
+          className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-3 border-2"
+          // style={{ flexWrap: "wrap", width: "80%" }}
         >
           {menuItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col  bg-amber-100 md:w-5/12 xl:max-w-3/12 lg:max-w-2/7 md:p-4 sm:p-4 p-4  border-gray-900 text-center rounded-xl shadow-xl hover:shadow-gray-600 hover:shadow-lg transition"
+              className="flex flex-col bg-amber-100 md:p-4 sm:p-4 p-4  border-gray-900 text-center rounded-xl shadow-xl hover:shadow-gray-600 hover:shadow-lg transition"
             >
               <h3 className="text-xl font-semibold text-gray-800 ">
                 {item.name}
@@ -125,11 +125,11 @@ function Index() {
               <p className="text-gray-600 mb-2">{item.description}</p>
               <Image
                 src={item.image_url ?? ""}
-                width={300}
+                width={600}
                 alt={item.name}
                 height={250}
                 style={{
-                  minWidth: "250px",
+                  // width: "300px",
                   height: "250px",
                   objectFit: "cover",
                   border: "1px solid black",
@@ -160,6 +160,7 @@ function Index() {
           ))}
         </div>
       </div>
+
       <CartModal
         open={open}
         setOpen={setOpen}
