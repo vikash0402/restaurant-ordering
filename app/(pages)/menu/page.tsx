@@ -111,7 +111,7 @@ function Index() {
       </div>
       <div className="flex justify-center p-5">
         <div
-          className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-3 border-2"
+          className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-3"
           // style={{ flexWrap: "wrap", width: "80%" }}
         >
           {menuItems.map((item) => (
@@ -139,7 +139,7 @@ function Index() {
               />
               <div className="mt-4 flex items-center justify-center gap-4">
                 <span className="text-lg font-bold text-gray-700">
-                  ${item.price.toFixed(2)}
+                  ₹{item.price.toFixed(2)}
                 </span>
                 <button // onClick={opencart}
                   onClick={() => handleAddToCart(item)}

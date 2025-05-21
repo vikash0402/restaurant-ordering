@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -107,6 +107,13 @@ async function Orders({ searchParams }: Props) {
             </Box>
           </Box>
         ))}
+      <Box className="flex justify-center  mt-4   ">
+        <Link href={"/menu"}>
+          <Button variant="contained" color="warning">
+            Order Again
+          </Button>
+        </Link>
+      </Box>
     </Box>
   );
 }

@@ -212,12 +212,13 @@ const CartModal: React.FC<BasicModalProps> = ({
                     alt={cartItem.name}
                     width={70}
                     height={70}
-                    style={{
-                      width: "70px",
-                      height: "70px",
-                      objectFit: "cover",
-                      borderRadius: 8,
-                    }}
+                    // style={{
+                    //   width: "70px",
+                    //   height: "70px",
+                    //   objectFit: "cover",
+                    //   borderRadius: 8,
+                    // }}
+                    className="  sm:w-15 sm:h-15 md:w-16 md:h-16 object-cover rounded"
                   />
                 </Box>
 
@@ -301,7 +302,7 @@ const CartModal: React.FC<BasicModalProps> = ({
             />
           )}
 
-          {!openForm && !user?.name && (
+          {totalCharge() > 0 && !openForm && !user?.name && (
             <Box className="flex justify-center" onClick={handleCheckOut}>
               <Button variant="outlined">Check Out </Button>
               {/* <SwipeableDrawer
@@ -323,7 +324,7 @@ const CartModal: React.FC<BasicModalProps> = ({
               </SwipeableDrawer> */}
             </Box>
           )}
-          {user?.name && (
+          {totalCharge() > 0 && user?.name && (
             <Payment
               amount={orderResponce?.grand_total ?? 0}
               contact={user.phone ?? 0}
