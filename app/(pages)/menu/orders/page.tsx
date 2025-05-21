@@ -42,7 +42,8 @@ async function Orders({ searchParams }: Props) {
       <Box className="bg-gray-200 py-3 text-center ">
         <Typography fontWeight={600}>PAST ORDERS</Typography>
       </Box>
-      {orders.length &&
+      {orders &&
+        orders.length &&
         orders.map((order) => (
           <Box key={order.orderId} className="flex flex-col mx-5 border-b-2">
             <Box className="flex w-full justify-between pt-5 pb-3">
@@ -95,9 +96,12 @@ async function Orders({ searchParams }: Props) {
                 </Typography>
               </Box>
               <Link href={`/menu/orders/${order.orderId}`}>
-                <Box className="flex gap-1.5 items-center">
-                  <Typography>View</Typography>
-                  <VisibilityIcon color="success" />
+                <Box className="flex gap-1.5 h-full">
+                  <Typography sx={{ alignSelf: "center" }}>View</Typography>
+                  <VisibilityIcon
+                    sx={{ alignSelf: "center" }}
+                    color="success"
+                  />
                 </Box>
               </Link>
             </Box>
