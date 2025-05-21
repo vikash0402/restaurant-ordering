@@ -112,6 +112,13 @@ export async function POST(
       where: {
         id: Number(id),
       },
+      include: {
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
 
     if (body.status === "PAID") {
@@ -139,10 +146,15 @@ export async function POST(
       console.log(transaction);
       console.log({ updateOrder });
 
+      const payload = {
+        redirect_path: `/menu/orders?customerId=${order?.customer.id}`,
+      };
+
       return new Response(
         JSON.stringify({
           success: true,
           statusCode: status.SUCCESS,
+          data: payload,
           message: paymentMessage.PAYMENT_SUCCESS,
         }),
         {
