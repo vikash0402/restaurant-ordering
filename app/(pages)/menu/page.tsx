@@ -98,7 +98,7 @@ function Index() {
 
   return (
     <div className="w-full">
-      <h2 className=" font-bold text-center text-2xl">Menu Items</h2>
+      <h2 className=" font-bold text-center text-2xl mt-3">Menu Items</h2>
       <div className="absolute top-0 right-0   text-white px-4 py-2 rounded">
         <IconButton onClick={handleOpen}>
           <ShoppingCartIcon fontSize="small" />
@@ -111,13 +111,13 @@ function Index() {
       </div>
       <div className="flex justify-center w-full ">
         <div
-          className="flex justify-center gap-5 flex-wrap "
+          className="flex justify-center gap-7 flex-wrap mt-3 "
           style={{ flexWrap: "wrap" }}
         >
           {menuItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:w-full md:w-5/12 lg:max-w-2/7 md:p-3 sm:p-3 p-2 border-2  border-red-600 text-center bg-yellow-100  rounded-lg shadow hover:shadow-amber-300 hover:shadow-lg transition"
+              className="flex flex-col  bg-amber-100 md:w-5/12 xl:max-w-3/12 lg:max-w-2/7 md:p-4 sm:p-4 p-4  border-gray-900 text-center rounded-xl shadow-xl hover:shadow-gray-600 hover:shadow-lg transition"
             >
               <h3 className="text-xl font-semibold text-gray-800 ">
                 {item.name}
