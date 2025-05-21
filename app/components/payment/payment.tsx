@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Declare Razorpay types if not available
 declare global {
@@ -46,7 +47,12 @@ const Payment: React.FC<PaymentProps> = ({
   contact,
   orderId,
 }) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  console.log({ loading });
   const updatePaymentStatus = async (paymentId: string) => {
+    setLoading(true);
     const data = { status: "PAID", paymentId: paymentId };
 
     console.log("payment payload", data);
@@ -60,17 +66,19 @@ const Payment: React.FC<PaymentProps> = ({
     });
     const payment = await response.json();
     const redirectPath: string | undefined = payment.data.redirect_path;
-    const baseUrl: string | undefined =
-      process.env.NODE_ENV === "production"
-        ? process.env.BASE_URL
-        : "http://localhost:3000";
+    // const baseUrl: string | undefined =
+    //   process.env.NODE_ENV === "production"
+    //     ? process.env.BASE_URL
+    //     : "http://localhost:3000";
 
     if (payment?.success === true) {
-      if (typeof redirectPath === "string" && typeof baseUrl === "string") {
-        const finalURL = baseUrl + redirectPath;
-        console.log(finalURL);
-        window.location.href = finalURL;
+      if (typeof redirectPath === "string") {
+        // const finalURL = baseUrl + redirectPath;
+        // console.log(finalURL);
+        // window.location.href = finalURL;
+        router.push(redirectPath);
         console.log("payment sucessfully done");
+        setLoading(false);
       }
     }
   };
