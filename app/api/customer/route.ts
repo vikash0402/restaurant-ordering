@@ -18,12 +18,12 @@ export async function POST(request: Request) {
   const body: ICreateInput = await request.json();
 
   console.log({ body });
-  const { name, phone_number } = body;
+  const { name, phone_number }: { name: string; phone_number: string } = body;
   console.log(typeof name, typeof phone_number);
 
   const customer = await prisma.customer.findFirst({
     where: {
-      phone_number: Number(phone_number),
+      phone_number: phone_number,
     },
   });
 
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   const payload = {
     name,
-    phone_number: Number(phone_number),
+    phone_number: phone_number,
   };
 
   const newCustomer = await prisma.customer.create({

@@ -1,4 +1,4 @@
 export interface ICreateInput {
   name: string;
-  phone_number: number;
+  phone_number: string;
 }
