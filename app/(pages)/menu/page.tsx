@@ -98,10 +98,12 @@ function Index() {
 
   return (
     <div className="w-full">
-      <h2 className=" font-bold text-center text-2xl mt-3">Menu Items</h2>
-      <div className="absolute top-0 right-0   text-white px-4 py-2 rounded">
+      <h2 className=" font-bold text-center text-2xl mt-3 dark:text-white">
+        Menu Items
+      </h2>
+      <div className="absolute top-0 right-0 px-4  py-2 rounded dark:text-white">
         <IconButton onClick={handleOpen}>
-          <ShoppingCartIcon fontSize="small" />
+          <ShoppingCartIcon className="dark:text-white" fontSize="small" />
           <CartBadge
             badgeContent={cart.length}
             color="primary"

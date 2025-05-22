@@ -1,14 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Modal,
-  // SwipeableDrawer,
-  Typography,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, Modal, Typography } from "@mui/material";
 import UserForm from "@/app/components/userForm";
 import Payment from "./payment/payment";
 import { OrderResponse } from "../interface/clientInterface/order.interface";
@@ -160,28 +153,9 @@ const CartModal: React.FC<BasicModalProps> = ({
     }
   };
 
-  // const toggleDrawer =
-  //   (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-  //     if (
-  //       event &&
-  //       event.type === "keydown" &&
-  //       ((event as React.KeyboardEvent).key === "Tab" ||
-  //         (event as React.KeyboardEvent).key === "Shift")
-  //     ) {
-  //       return;
-  //     }
-  //     setOpenForm(open);
-  //   };
-
   const handleCofirmClose = () => {
     setOpenConfirmModal(false);
-    // setOpenForm(true);
   };
-
-  // const handleConfirm = () => {
-  //   setOpenConfirmModal(false);
-  //   console.log("handleConfirm clicked");
-  // };
 
   const handlePlaceOrder = () => {
     setOpenConfirmModal(true);

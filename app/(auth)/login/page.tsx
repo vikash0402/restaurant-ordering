@@ -1,5 +1,6 @@
 "use client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface IFormInputs {
@@ -15,8 +16,6 @@ const Login: React.FC = () => {
   } = useForm<IFormInputs>();
 
   const router = useRouter();
-
-  // const [user, setUser] = useState({});
 
   const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
     const response = await fetch("/api/auth/login", {
