@@ -91,7 +91,7 @@ const Payment: React.FC<PaymentProps> = ({
     description: "The Heartbeat of Indian Flavor.",
     image: "https://cdn.razorpay.com/logos/7K3b6d18wHwKzL_medium.png",
     handler: function (data) {
-      alert(data.razorpay_payment_id);
+      // alert(data.razorpay_payment_id);
       updatePaymentStatus(data.razorpay_payment_id);
     },
     prefill: {

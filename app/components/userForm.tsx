@@ -63,6 +63,8 @@ const UserForm: React.FC<IUserForm> = ({
           <span className="text-red-500"> Name is required </span>
         )}
         <input
+          minLength={10}
+          maxLength={10}
           placeholder="Phone Number"
           {...register("phone", {
             required: true,
