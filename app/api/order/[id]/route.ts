@@ -66,7 +66,9 @@ export async function GET(
       itemDetails: orderItemsList,
       chargeDetails: charges,
       status: orders?.status,
-      total: charges.reduce((acc, charge) => acc + (charge.value ?? 0), 0),
+      total: charges
+        .reduce((acc, charge) => acc + (charge.value ?? 0), 0)
+        .toFixed(2),
     };
 
     console.log({ orderDetails });

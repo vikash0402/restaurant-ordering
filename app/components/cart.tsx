@@ -146,11 +146,14 @@ const CartModal: React.FC<BasicModalProps> = ({
         const data: OrderResponse = res.data;
         setOrderResponce({
           ...data,
-          grand_total:
-            data.total_amount +
-            data.sms_charge +
-            data.delivery_charge +
-            data.platform_charge,
+          grand_total: Number(
+            (
+              data.total_amount +
+              data.sms_charge +
+              data.delivery_charge +
+              data.platform_charge
+            ).toFixed(2)
+          ),
         });
       }
       console.log("order response", res);

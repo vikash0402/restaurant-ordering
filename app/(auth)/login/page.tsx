@@ -1,5 +1,5 @@
 "use client";
-// import { useState } from "react";
+import { useRouter } from "next/router";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface IFormInputs {
@@ -14,6 +14,8 @@ const Login: React.FC = () => {
     handleSubmit,
   } = useForm<IFormInputs>();
 
+  const router = useRouter();
+
   // const [user, setUser] = useState({});
 
   const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
@@ -24,10 +26,11 @@ const Login: React.FC = () => {
     });
 
     const user = await response.json();
-
     console.log("data", user.data);
-
     // setUser(user?.data);
+    if (user.success === true) {
+      router.push("/dashboard");
+    }
   };
 
   return (
