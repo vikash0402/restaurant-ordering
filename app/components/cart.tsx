@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Box,
@@ -66,6 +66,7 @@ const CartModal: React.FC<BasicModalProps> = ({
   setOpen,
 }) => {
   const [openForm, setOpenForm] = useState<boolean>(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState<boolean>(false);
   const [user, setUser] = useState<IFormInputs>({
     id: null,
     name: "",
@@ -79,9 +80,10 @@ const CartModal: React.FC<BasicModalProps> = ({
   const handleClose = () => setOpen(false);
 
   const totalCharge = () => {
-    return cart.reduce(
-      (acc, curr) => acc + (curr.quantity ?? 0) * curr.price,
-      0
+    return Number(
+      cart
+        .reduce((acc, curr) => acc + (curr.quantity ?? 0) * curr.price, 0)
+        .toFixed(2)
     );
   };
 
@@ -102,7 +104,8 @@ const CartModal: React.FC<BasicModalProps> = ({
   useEffect(() => {
     console.log(user);
     if (user.id) {
-      createOrder(user);
+      setIsLoading(false);
+      setOpenForm(false);
     }
   }, [user]);
 
@@ -151,9 +154,6 @@ const CartModal: React.FC<BasicModalProps> = ({
         });
       }
       console.log("order response", res);
-
-      setIsLoading(false);
-      setOpenForm(false);
     }
   };
 
@@ -170,6 +170,158 @@ const CartModal: React.FC<BasicModalProps> = ({
   //     setOpenForm(open);
   //   };
 
+  const handleCofirmClose = () => {
+    setOpenConfirmModal(false);
+    // setOpenForm(true);
+  };
+
+  // const handleConfirm = () => {
+  //   setOpenConfirmModal(false);
+  //   console.log("handleConfirm clicked");
+  // };
+
+  const handlePlaceOrder = () => {
+    setOpenConfirmModal(true);
+    createOrder(user);
+  };
+
+  const ConfirmPage = () => {
+    return (
+      <Modal
+        open={openConfirmModal}
+        onClose={handleCofirmClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className=" flex justify-center w-full">
+          <Box
+            className="  w-11/12  md:w-7/12 lg:w-6/12"
+            sx={{
+              position: "relative",
+              border: "1px solid #e0e0e0",
+              borderRadius: 2,
+              padding: 2,
+              // minWidth: "350px",
+              // margin: "auto",
+              // marginX: "10px",
+              backgroundColor: "#fff",
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              top: "15vh",
+              maxHeight: "70vh",
+              overflowX: "hidden",
+            }}
+          >
+            <Box className="flex flex-col justify-center">
+              <Box className="flex flex-col text-center justify-center gap-2">
+                <Typography
+                  sx={{
+                    bgcolor: "black",
+                    color: "white",
+                    py: 1,
+                    mb: 2,
+                    borderRadius: "5px",
+                  }}
+                  fontWeight={600}
+                >
+                  Invoice
+                </Typography>
+                {/* <Typography> Review your 🛒order details </Typography> */}
+              </Box>
+              {cart.length ? (
+                cart.map((cartItem, index) => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    key={cartItem.name + index}
+                  >
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant="subtitle1"
+                        color="textSecondary"
+                        fontSize={14}
+                      >
+                        {cartItem.name} * {cartItem.quantity}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      <Typography color="textSecondary" fontSize={14}>
+                        ₹{cartItem.price * (cartItem.quantity ?? 1)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))
+              ) : (
+                <Box className="text-lg text-center">
+                  <Typography fontSize={14}>NO ITEM FOUND</Typography>
+                </Box>
+              )}
+              <Box>
+                <Typography fontWeight={600} fontSize={16} mt={1}>
+                  Bill Details
+                </Typography>
+                <Box className="flex flex-col ">
+                  {chargesDetails.map((charges, index) => (
+                    <Box
+                      key={charges.key + index}
+                      className="flex justify-between"
+                    >
+                      <Typography fontSize={14}>{charges.key}</Typography>
+                      <Typography fontSize={14}>₹{charges.value}</Typography>
+                    </Box>
+                  ))}
+                  <Box className="flex justify-between py-1">
+                    <Typography fontWeight={600} fontSize={16}>
+                      Grand total:
+                    </Typography>
+                    <Typography fontWeight={600} fontSize={16}>
+                      ₹
+                      {chargesDetails
+                        .reduce((acc, curr) => acc + curr.value, 0)
+                        .toFixed(2)}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className="flex justify-center gap-3 ">
+                <Payment
+                  amount={orderResponce?.grand_total ?? 0}
+                  contact={user.phone ?? 0}
+                  customerName={user.name}
+                  orderId={Number(orderResponce?.id)}
+                />
+                {/* <Button
+                variant="outlined"
+                color="primary"
+                // className="p-2 "
+                onClick={handleConfirm}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleCofirmClose}
+              >
+                No
+              </Button> */}
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+    );
+  };
+
   return (
     <div>
       <Modal
@@ -178,134 +330,152 @@ const CartModal: React.FC<BasicModalProps> = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box
-          sx={{
-            position: "relative",
-            border: "1px solid #e0e0e0",
-            borderRadius: 2,
-            padding: 2,
-            maxWidth: "70vw",
-            margin: "auto",
-            backgroundColor: "#fff",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            top: "10%",
-            maxHeight: "80vh",
-            // overflow: "scroll",
-            overflowX: "hidden",
-          }}
-        >
-          {cart.length ? (
-            cart.map((cartItem, index) => (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  mb: 1,
-                }}
-                key={cartItem.name + index}
-              >
-                <Box>
-                  <Image
-                    src={cartItem.image_url ?? ""}
-                    alt={cartItem.name}
-                    width={70}
-                    height={70}
-                    // style={{
-                    //   width: "70px",
-                    //   height: "70px",
-                    //   objectFit: "cover",
-                    //   borderRadius: 8,
-                    // }}
-                    className="  sm:w-15 sm:h-15 md:w-16 md:h-16 object-cover rounded"
-                  />
-                </Box>
-
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    {cartItem.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    400 g
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      textDecoration: "underline",
-                      cursor: "pointer",
-                      mt: 0.5,
-                    }}
-                    color="primary"
-                  >
-                    Save for later
-                  </Typography>
-                </Box>
-
+        <Box className=" flex justify-center w-full">
+          <Box
+            className="sm:11/12 md:w-9/12 lg:w-8/12"
+            sx={{
+              position: "relative",
+              border: "1px solid #e0e0e0",
+              borderRadius: 2,
+              padding: 2,
+              margin: "auto",
+              // marginX: "10px",
+              backgroundColor: "#fff",
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              top: "9vh",
+              maxHeight: "80vh",
+              // overflow: "scroll",
+              overflowX: "hidden",
+            }}
+          >
+            {cart.length ? (
+              cart.map((cartItem, index) => (
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-end",
+                    alignItems: "center",
+                    gap: 2,
+                    mb: 1,
                   }}
+                  key={cartItem.name + index}
                 >
-                  <ButtonGroup
-                    variant="contained"
-                    size="small"
-                    aria-label="Quantity control"
+                  <Box>
+                    <Image
+                      src={cartItem.image_url ?? ""}
+                      alt={cartItem.name}
+                      width={70}
+                      height={70}
+                      // style={{
+                      //   width: "70px",
+                      //   height: "70px",
+                      //   objectFit: "cover",
+                      //   borderRadius: 8,
+                      // }}
+                      className="  sm:w-15 sm:h-15 md:w-16 md:h-16 object-cover rounded"
+                    />
+                  </Box>
+
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {cartItem.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      400 g
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        mt: 0.5,
+                      }}
+                      color="primary"
+                    >
+                      Save for later
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                    }}
                   >
-                    <Button onClick={() => handleDecrement(index)}>-</Button>
-                    <Button disabled>{cartItem.quantity ?? 0}</Button>
-                    <Button onClick={() => handleIncrement(index)}>+</Button>
-                  </ButtonGroup>
-                  <Typography fontWeight="bold" sx={{ mt: 1 }}>
-                    ₹{cartItem.price}
+                    <ButtonGroup
+                      variant="contained"
+                      size="small"
+                      aria-label="Quantity control"
+                    >
+                      <Button onClick={() => handleDecrement(index)}>-</Button>
+                      <Button disabled>{cartItem.quantity ?? 0}</Button>
+                      <Button onClick={() => handleIncrement(index)}>+</Button>
+                    </ButtonGroup>
+                    <Typography fontWeight="bold" sx={{ mt: 1 }}>
+                      ₹{cartItem.price}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))
+            ) : (
+              <Box className="text-lg text-center">
+                <Typography>NO ITEM FOUND</Typography>
+              </Box>
+            )}
+            <Box>
+              <Typography fontWeight={600} fontSize={18} mt={3}>
+                Bill Details
+              </Typography>
+              <Box className="flex flex-col">
+                {chargesDetails.map((charges, index) => (
+                  <Box
+                    key={charges.key + index}
+                    className="flex justify-between"
+                  >
+                    <Typography>{charges.key}</Typography>
+                    <Typography>₹{charges.value}</Typography>
+                  </Box>
+                ))}
+                <Box className="flex justify-between py-1">
+                  <Typography fontWeight={600} fontSize={20}>
+                    Grand total:
+                  </Typography>
+                  <Typography fontWeight={600} fontSize={20}>
+                    ₹
+                    {chargesDetails
+                      .reduce((acc, curr) => acc + curr.value, 0)
+                      .toFixed(2)}
                   </Typography>
                 </Box>
               </Box>
-            ))
-          ) : (
-            <Box className="text-lg text-center">
-              <Typography>NO ITEM FOUND</Typography>
             </Box>
-          )}
-          <Box>
-            <Typography fontWeight={600} fontSize={18} mt={3}>
-              Bill Details
-            </Typography>
-            <Box className="flex flex-col">
-              {chargesDetails.map((charges, index) => (
-                <Box key={charges.key + index} className="flex justify-between">
-                  <Typography>{charges.key}</Typography>
-                  <Typography>₹{charges.value}</Typography>
-                </Box>
-              ))}
-              <Box className="flex justify-between₹73.98 py-1">
-                <Typography fontWeight={600} fontSize={20}>
-                  Grand total{" "}
-                </Typography>
-                <Typography fontWeight={600} fontSize={20}>
-                  ₹
-                  {chargesDetails
-                    .reduce((acc, curr) => acc + curr.value, 0)
-                    .toFixed(2)}
-                </Typography>
+
+            {openForm && (
+              <UserForm
+                setUser={setUser}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            )}
+
+            {/* {!openForm && (
+              <Box className="flex justify-center mb-2.5">
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </Button>
               </Box>
-            </Box>
-          </Box>
+            )} */}
 
-          {openForm && (
-            <UserForm
-              setUser={setUser}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
-            />
-          )}
+            {totalCharge() > 0 && !openForm && !user?.name && (
+              <Box className="flex justify-center" onClick={handleCheckOut}>
+                <Button variant="outlined">Check Out </Button>
 
-          {totalCharge() > 0 && !openForm && !user?.name && (
-            <Box className="flex justify-center" onClick={handleCheckOut}>
-              <Button variant="outlined">Check Out </Button>
-              {/* <SwipeableDrawer
+                {/* <SwipeableDrawer
                 anchor={"bottom"}
                 open={openForm}
                 onClose={toggleDrawer(false)}
@@ -322,16 +492,27 @@ const CartModal: React.FC<BasicModalProps> = ({
                   <UserForm setUser={setUser} setOpenForm={setOpenForm} />
                 </Box>
               </SwipeableDrawer> */}
-            </Box>
-          )}
-          {totalCharge() > 0 && user?.name && (
-            <Payment
-              amount={orderResponce?.grand_total ?? 0}
-              contact={user.phone ?? 0}
-              customerName={user.name}
-              orderId={Number(orderResponce?.id)}
-            />
-          )}
+              </Box>
+            )}
+            {totalCharge() > 0 && user?.name && (
+              // <Payment
+              //   amount={orderResponce?.grand_total ?? 0}
+              //   contact={user.phone ?? 0}
+              //   customerName={user.name}
+              //   orderId={Number(orderResponce?.id)}
+              // />
+              <Box className="flex justify-center mb-2.5">
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </Button>
+              </Box>
+            )}
+            <ConfirmPage />
+          </Box>
         </Box>
       </Modal>
     </div>

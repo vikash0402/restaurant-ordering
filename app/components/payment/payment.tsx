@@ -123,8 +123,9 @@ const Payment: React.FC<PaymentProps> = ({
   return (
     <Box className="flex justify-center">
       <Button
-        sx={{ background: "red" }}
+        color="error"
         variant="contained"
+        sx={{ fontSize: 14 }}
         onClick={() => openPayModal(options)}
       >
         Pay Now{" "}
